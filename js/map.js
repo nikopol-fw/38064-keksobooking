@@ -55,29 +55,23 @@ var MAX_ROOMS = 5;
 var MIN_GUESTS = 1;
 var MAX_GUESTS = 100;
 
-var avatarsList = [];
-for (var i = 1; i <= AVATAR_NUMBER; i++) {
-  avatarsList.push(i);
-}
-
-var titlesList = REALTY_TITLES.slice();
-
-var map = document.querySelector('.map');
-var pinMap = map.querySelector('.map__pins');
-var filterMap = map.querySelector('.map__filters-container');
-
 
 // Возвращает итератор случайного элемента массива
-// @arrayArg - массив с элементами для выборки
-var getRandomIteratorArray = function (arrayArg) {
-  return Math.floor(Math.random() * arrayArg.length);
+// @arr - массив с элементами для выборки
+var getRandomIteratorArray = function (arr) {
+  return Math.floor(Math.random() * arr.length);
 };
 
-// Возвращает случайный элемент из массива, удаляя его из массива
-// @iterator - целое число, итератор элемента массива для извлечения
-// @arrayToSplice - массив из которого будет выбираться случайный элемент
-var spliceItemArray = function (iterator, arrayToSplice) {
-  return arrayToSplice.splice(iterator, 1)[0];
+// Возвращает массив перемешанный по алгоритму Фишера-Йетса
+// @arr - массив, который необходимо перемешать
+var shuffleArray = function (arr) {
+  for (var j = arr.length - 1; j > 0; j--) {
+    var rndm = Math.floor(Math.random() * (j + 1));
+    var temp = arr[rndm];
+    arr[rndm] = arr[j];
+    arr[j] = temp;
+  }
+  return arr;
 };
 
 // Возвращает случайное значение между min и max с равномерным распределением
@@ -88,13 +82,16 @@ var getRandomBetweenMinMax = function (min, max) {
 };
 
 // Возвращает url для Аватарки
-// @listOfAvatars - массив с номерами картинок аватаров (массив будет изменяться функцией, splice)
+// @listOfAvatars - массив (перемешанный) с номерами картинок аватаров (будет извлечен последний элемент из массива)
 var getAvatar = function (listOfAvatars) {
-  var iterator = getRandomIteratorArray(listOfAvatars);
-  var imgUrl = spliceItemArray(iterator, listOfAvatars);
-  imgUrl.toString();
+  if (listOfAvatars.length === 0) {
+    return -1;
+  }
 
-  if ((iterator + 1) < 10) {
+  var imgNumber = listOfAvatars.pop();
+  var imgUrl = imgNumber.toString();
+
+  if (imgNumber < 10) {
     imgUrl = '0' + imgUrl;
   }
 
@@ -102,12 +99,14 @@ var getAvatar = function (listOfAvatars) {
   return imgUrl;
 };
 
-// Возвращает случайную строку-заголовок для объявления из массива заголовков
-// @listOfTitles - массив с названиями (массив будет изменяться функцией, splice)
+// Возвращает строку-заголовок для объявления из массива заголовков
+// @listOfTitles - массив (перемешанный) с названиями (будет извлечен последний элемент из массива)
 var getTitle = function (listOfTitles) {
-  var iterator = getRandomIteratorArray(listOfTitles);
-  var newTitle = spliceItemArray(iterator, listOfTitles);
+  if (listOfTitles.length === 0) {
+    return -1;
+  }
 
+  var newTitle = listOfTitles.pop();
   return newTitle;
 };
 
@@ -120,24 +119,18 @@ var getBalloonXCoords = function (container) {
   return newCoord;
 };
 
-// Возвращает новый массив указанной длинны с перемешанными случайным образом элементами переданного массива
-// Должно выполняться условие: arrayToSort.length >= number, иначе функция вернет -1
-// @arrayToSort - массив для сортировки (меремешивания)
-// @number - число, количество элементов в новом массиве
-var sortRandomArray = function (arrayToSort, number) {
-  if (number > arrayToSort.length) {
-    return -1;
-  } else {
-    var unsortedArray = arrayToSort.slice();
-    var sortedArray = [];
-    for (var j = 0; j < number; j++) {
-      var iterator = getRandomIteratorArray(unsortedArray);
-      sortedArray.push(unsortedArray.splice(iterator, 1)[0]);
-    }
 
-    return sortedArray;
-  }
-};
+var avatarsList = [];
+for (var i = 1; i <= AVATAR_NUMBER; i++) {
+  avatarsList.push(i);
+}
+
+var avatarsRandomList = shuffleArray(avatarsList);
+var titlesRandomList = shuffleArray(REALTY_TITLES.slice());
+
+var map = document.querySelector('.map');
+var pinMap = map.querySelector('.map__pins');
+var filterMap = map.querySelector('.map__filters-container');
 
 // Возвращает объект с информацией о новом объявлении
 // @listOfAvatars - массив с номерами от 1 до количества картинок с аватарами для генерации url'а картинки (массив будет уменьшаться на извелеченный элемент, splice)
@@ -145,37 +138,28 @@ var sortRandomArray = function (arrayToSort, number) {
 // @balloonPlace - domElement в котором будут располагаться balloons
 // @balloonCoords - двумерный массив с верхней и нижней y-координатами balloons
 var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoords) {
-  var newAvatar = getAvatar(listOfAvatars);
-  var newTitle = getTitle(listOfTitles);
   var xLocation = getBalloonXCoords(balloonPlace);
   var yLocation = getRandomBetweenMinMax(balloonCoords[0], balloonCoords[1]) - BALLOON_HEIGHT;
   var newAddress = xLocation.toString() + ', ' + yLocation.toString();
-  var newPrice = getRandomBetweenMinMax(MIN_PRICE, MAX_PRICE);
-  var newType = REALTY_TYPES[getRandomIteratorArray(REALTY_TYPES)];
-  var newRooms = getRandomBetweenMinMax(MIN_ROOMS, MAX_ROOMS);
-  var newGuests = getRandomBetweenMinMax(MIN_GUESTS, MAX_GUESTS);
-  var newCheckin = CHECK_IN_OUT[getRandomIteratorArray(CHECK_IN_OUT)];
-  var newCheckout = CHECK_IN_OUT[getRandomIteratorArray(CHECK_IN_OUT)];
-  var newFeatures = sortRandomArray(FEATURES, getRandomIteratorArray(FEATURES));
-  var newDescription = '';
-  var newPhotos = sortRandomArray(PHOTOS, PHOTOS.length);
+
+  var newFeatures = shuffleArray(FEATURES.slice()).slice(0, getRandomBetweenMinMax(1, FEATURES.length));
 
   var newAd = {
     'author': {
-      'avatar': newAvatar
+      'avatar': getAvatar(listOfAvatars)
     },
     'offer': {
-      'title': newTitle,
+      'title': getTitle(listOfTitles),
       'address': newAddress,
-      'price': newPrice,
-      'type': newType,
-      'rooms': newRooms,
-      'guests': newGuests,
-      'checkin': newCheckin,
-      'checkout': newCheckout,
+      'price': getRandomBetweenMinMax(MIN_PRICE, MAX_PRICE),
+      'type': REALTY_TYPES[getRandomIteratorArray(REALTY_TYPES)],
+      'rooms': getRandomBetweenMinMax(MIN_ROOMS, MAX_ROOMS),
+      'guests': getRandomBetweenMinMax(MIN_GUESTS, MAX_GUESTS),
+      'checkin': CHECK_IN_OUT[getRandomIteratorArray(CHECK_IN_OUT)],
+      'checkout': CHECK_IN_OUT[getRandomIteratorArray(CHECK_IN_OUT)],
       'features': newFeatures,
-      'description': newDescription,
-      'photos': newPhotos
+      'description': '',
+      'photos': shuffleArray(PHOTOS.slice())
     },
     'location': {
       'x': xLocation,
@@ -190,7 +174,7 @@ var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoord
 // Создаем массив объявлений
 var advertisements = [];
 for (i = 0; i < AD_NUMBER; i++) {
-  advertisements.push(createAd(avatarsList, titlesList, pinMap, Y_BALLOON_CHOORDINATES));
+  advertisements.push(createAd(avatarsRandomList, titlesRandomList, pinMap, Y_BALLOON_CHOORDINATES));
 }
 
 
@@ -227,29 +211,8 @@ var createFeaturesItemNode = function (feature) {
   var item = document.createElement('li');
   item.classList.add('popup__feature');
 
-  var classModify = 'popup__feature--';
-  switch (feature) {
-    case 'wifi':
-      classModify += 'wifi';
-      break;
-    case 'dishwasher':
-      classModify += 'dishwasher';
-      break;
-    case 'parking':
-      classModify += 'parking';
-      break;
-    case 'washer':
-      classModify += 'washer';
-      break;
-    case 'elevator':
-      classModify += 'elevator';
-      break;
-    case 'conditioner':
-      classModify += 'conditioner';
-      break;
-    default:
-      break;
-  }
+  var classModify = 'popup__feature--' + feature;
+
   item.classList.add(classModify);
 
   return item;
@@ -278,6 +241,13 @@ var eraseNode = function (node) {
   return node;
 };
 
+var housingTypeTitles = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало'
+};
+
 // Возвращает domElement блок объявления
 // @template - domElement (разметка объявления)
 // @adv - объект, содержащий информацию объявления, созданный функцией createAd
@@ -287,24 +257,10 @@ var createCardNode = function (template, adv) {
   newNode.querySelector('.popup__title').textContent = adv.offer.title;
   newNode.querySelector('.popup__text--address').textContent = adv.offer.address;
   newNode.querySelector('.popup__text--price').textContent = adv.offer.price.toString() + ' ₽/ночь';
-  switch (adv.offer.type) {
-    case 'palace':
-      var housingType = 'Дворец';
-      break;
-    case 'flat':
-      housingType = 'Квартира';
-      break;
-    case 'house':
-      housingType = 'Дом';
-      break;
-    case 'bungalo':
-      housingType = 'Бунгало';
-      break;
-    default:
-      housingType = 'Неизвестно';
-      break;
-  }
+
+  var housingType = housingTypeTitles[adv.offer.type];
   newNode.querySelector('.popup__type').textContent = housingType;
+
   newNode.querySelector('.popup__text--capacity').textContent = adv.offer.rooms.toString() + ' комнаты для ' + adv.offer.guests.toString() + ' гостей';
   newNode.querySelector('.popup__text--time').textContent = 'Заезд после ' + adv.offer.checkin + ', выезд до ' + adv.offer.checkout;
 
