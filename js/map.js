@@ -11,12 +11,12 @@ var REALTY_TITLES = [
   'Неуютное бунгало по колено в воде'
 ];
 
-var REALTY_TYPES = [
-  'palace',
-  'flat',
-  'house',
-  'bungalo'
-];
+var REALTY_TYPES = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало',
+};
 
 var CHECK_IN_OUT = [
   '12:00',
@@ -144,6 +144,8 @@ var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoord
 
   var newFeatures = shuffleArray(FEATURES.slice()).slice(0, getRandomBetweenMinMax(1, FEATURES.length));
 
+  var realtyTypes = Object.keys(REALTY_TYPES);
+
   var newAd = {
     'author': {
       'avatar': getAvatar(listOfAvatars)
@@ -152,7 +154,7 @@ var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoord
       'title': getTitle(listOfTitles),
       'address': newAddress,
       'price': getRandomBetweenMinMax(MIN_PRICE, MAX_PRICE),
-      'type': REALTY_TYPES[getRandomIteratorArray(REALTY_TYPES)],
+      'type': REALTY_TYPES[realtyTypes[getRandomIteratorArray(realtyTypes)]],
       'rooms': getRandomBetweenMinMax(MIN_ROOMS, MAX_ROOMS),
       'guests': getRandomBetweenMinMax(MIN_GUESTS, MAX_GUESTS),
       'checkin': CHECK_IN_OUT[getRandomIteratorArray(CHECK_IN_OUT)],
@@ -175,6 +177,8 @@ var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoord
 var advertisements = [];
 for (i = 0; i < AD_NUMBER; i++) {
   advertisements.push(createAd(avatarsRandomList, titlesRandomList, pinMap, Y_BALLOON_CHOORDINATES));
+
+
 }
 
 
@@ -241,13 +245,6 @@ var eraseNode = function (node) {
   return node;
 };
 
-var housingTypeTitles = {
-  palace: 'Дворец',
-  flat: 'Квартира',
-  house: 'Дом',
-  bungalo: 'Бунгало'
-};
-
 // Возвращает domElement блок объявления
 // @template - domElement (разметка объявления)
 // @adv - объект, содержащий информацию объявления, созданный функцией createAd
@@ -257,9 +254,7 @@ var createCardNode = function (template, adv) {
   newNode.querySelector('.popup__title').textContent = adv.offer.title;
   newNode.querySelector('.popup__text--address').textContent = adv.offer.address;
   newNode.querySelector('.popup__text--price').textContent = adv.offer.price.toString() + ' ₽/ночь';
-
-  var housingType = housingTypeTitles[adv.offer.type];
-  newNode.querySelector('.popup__type').textContent = housingType;
+  newNode.querySelector('.popup__type').textContent = adv.offer.type;
 
   newNode.querySelector('.popup__text--capacity').textContent = adv.offer.rooms.toString() + ' комнаты для ' + adv.offer.guests.toString() + ' гостей';
   newNode.querySelector('.popup__text--time').textContent = 'Заезд после ' + adv.offer.checkin + ', выезд до ' + adv.offer.checkout;
