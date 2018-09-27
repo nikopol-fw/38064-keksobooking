@@ -206,7 +206,7 @@ var balloonFragmen = document.createDocumentFragment();
 for (i = 0; i < advertisements.length; i++) {
   balloonFragmen.appendChild(createAdvertisementNode(balloonTemplate, advertisements[i]));
 }
-pinMap.appendChild(balloonFragmen);
+// pinMap.appendChild(balloonFragmen);
 
 
 // Возвращаем domElement <li> с соответствующим удобству css-классом
@@ -287,7 +287,37 @@ var createCardNode = function (template, adv) {
 // Создаем карточку с информацией из первого элемента из списка объявлений
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var card = createCardNode(cardTemplate, advertisements[0]);
-map.insertBefore(card, filterMap);
+// map.insertBefore(card, filterMap);
 
-// Отображаем карту
-document.querySelector('.map').classList.remove('map--faded');
+
+var mapMainPin = document.querySelector('.map__pin');
+var formAd = document.querySelector('.ad-form');
+var fieldsetsFormAd = formAd.querySelectorAll('fieldset');
+var filtersFormMap = document.querySelector('.map__filters');
+var filtersMap = filtersFormMap.children;
+
+var coordsMainPinBegin = (mapMainPin.offsetLeft + mapMainPin.offsetWidth / 2).toString() + ', ' + (mapMainPin.offsetTop + mapMainPin.offsetHeight / 2).toString();
+
+var inputAddress = formAd.querySelector('#address');
+inputAddress.value = coordsMainPinBegin;
+
+// Активация форм
+var activatePage = function () {
+  map.classList.remove('map--faded');
+  formAd.classList.remove('ad-form--disabled');
+  for (var j = 0; j < fieldsetsFormAd.length; j++) {
+    fieldsetsFormAd[j].disabled = false;
+  }
+
+  for (j = 0; j < filtersMap.length; j++) {
+    filtersMap[j].disabled = false;
+  }
+};
+
+//
+
+
+mapMainPin.addEventListener('mouseup', function () {
+  activatePage();
+
+});
