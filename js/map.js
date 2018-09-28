@@ -56,6 +56,9 @@ var MIN_GUESTS = 1;
 var MAX_GUESTS = 100;
 
 
+var ESC_KEYCODE = 27;
+
+
 // Возвращает итератор случайного элемента массива
 // @arr - массив с элементами для выборки
 var getRandomIteratorArray = function (arr) {
@@ -119,19 +122,6 @@ var getBalloonXCoords = function (container) {
   return newCoord;
 };
 
-
-var avatarsList = [];
-for (var i = 1; i <= AVATAR_NUMBER; i++) {
-  avatarsList.push(i);
-}
-
-var avatarsRandomList = shuffleArray(avatarsList);
-var titlesRandomList = shuffleArray(REALTY_TITLES.slice());
-
-var map = document.querySelector('.map');
-var pinMap = map.querySelector('.map__pins');
-var filterMap = map.querySelector('.map__filters-container');
-
 // Возвращает объект с информацией о новом объявлении
 // @listOfAvatars - массив с номерами от 1 до количества картинок с аватарами для генерации url'а картинки (массив будет уменьшаться на извелеченный элемент, splice)
 // @listOfTitles - массив строк с названиями объявлений (массив будет уменьшаться на извелеченный элемент, splice)
@@ -172,20 +162,10 @@ var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoord
   return newAd;
 };
 
-
-// Создаем массив объявлений
-var advertisements = [];
-for (i = 0; i < AD_NUMBER; i++) {
-  advertisements.push(createAd(avatarsRandomList, titlesRandomList, pinMap, Y_BALLOON_CHOORDINATES));
-
-
-}
-
-
 // Возвразает domElement balloon'а
 // @template - node (разметка balloon'а)
 // @advert - объект типа объявление, созданный функцией createAd
-var createAdvertisementNode = function (template, advert) {
+var createPin = function (template, advert, index) {
   var newNode = template.cloneNode(true);
   var newNodeImg = newNode.querySelector('img');
 
@@ -195,19 +175,10 @@ var createAdvertisementNode = function (template, advert) {
   newNodeImg.src = advert.author.avatar;
   newNodeImg.alt = advert.offer.title;
 
+  newNode.setAttribute('data-pin-index', index);
+
   return newNode;
 };
-
-
-// Получаем шаблон balloon'а
-// Создаем фрагмент. Наполняем его элементами и размещаем в контейнере
-var balloonTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var balloonFragmen = document.createDocumentFragment();
-for (i = 0; i < advertisements.length; i++) {
-  balloonFragmen.appendChild(createAdvertisementNode(balloonTemplate, advertisements[i]));
-}
-// pinMap.appendChild(balloonFragmen);
-
 
 // Возвращаем domElement <li> с соответствующим удобству css-классом
 // @feature - строка, название удобства из списка FEATURES
@@ -224,7 +195,7 @@ var createFeaturesItemNode = function (feature) {
 
 // Возвращает domElement <img>, фотография жилья с необходимым scr
 // @photoSrc - строка, url картинки
-var createPhotoNode = function (photoSrc) {
+var createPhoto = function (photoSrc) {
   var item = document.createElement('img');
   item.src = photoSrc;
   item.classList.add('popup__photo');
@@ -245,61 +216,66 @@ var eraseNode = function (node) {
   return node;
 };
 
-// Возвращает domElement блок объявления
-// @template - domElement (разметка объявления)
+
+// Получаем шаблон карточки объявления
+// Создаем карточку на основе шаблона и скрываем ее
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var card = cardTemplate.cloneNode(true);
+card.classList.add('hidden');
+
+// Заполняет данные в блок объявления .card
 // @adv - объект, содержащий информацию объявления, созданный функцией createAd
-var createCardNode = function (template, adv) {
-  var newNode = template.cloneNode(true);
-
-  newNode.querySelector('.popup__title').textContent = adv.offer.title;
-  newNode.querySelector('.popup__text--address').textContent = adv.offer.address;
-  newNode.querySelector('.popup__text--price').textContent = adv.offer.price.toString() + ' ₽/ночь';
-  newNode.querySelector('.popup__type').textContent = adv.offer.type;
-
-  newNode.querySelector('.popup__text--capacity').textContent = adv.offer.rooms.toString() + ' комнаты для ' + adv.offer.guests.toString() + ' гостей';
-  newNode.querySelector('.popup__text--time').textContent = 'Заезд после ' + adv.offer.checkin + ', выезд до ' + adv.offer.checkout;
+var setCard = function (adv) {
+  card.querySelector('.popup__title').textContent = adv.offer.title;
+  card.querySelector('.popup__text--address').textContent = adv.offer.address;
+  card.querySelector('.popup__text--price').textContent = adv.offer.price.toString() + ' ₽/ночь';
+  card.querySelector('.popup__type').textContent = adv.offer.type;
+  card.querySelector('.popup__text--capacity').textContent = adv.offer.rooms.toString() + ' комнаты для ' + adv.offer.guests.toString() + ' гостей';
+  card.querySelector('.popup__text--time').textContent = 'Заезд после ' + adv.offer.checkin + ', выезд до ' + adv.offer.checkout;
 
   var featuresFragment = document.createDocumentFragment();
   for (i = 0; i < adv.offer.features.length; i++) {
     featuresFragment.appendChild(createFeaturesItemNode(adv.offer.features[i]));
   }
-  var featuresNode = newNode.querySelector('.popup__features');
+  var featuresNode = card.querySelector('.popup__features');
   eraseNode(featuresNode);
   featuresNode.appendChild(featuresFragment);
 
-  newNode.querySelector('.popup__description').textContent = adv.offer.description;
+  card.querySelector('.popup__description').textContent = adv.offer.description;
 
   var photosFragment = document.createDocumentFragment();
   for (i = 0; i < adv.offer.photos.length; i++) {
-    photosFragment.appendChild(createPhotoNode(adv.offer.photos[i]));
+    photosFragment.appendChild(createPhoto(adv.offer.photos[i]));
   }
-  var photosNode = newNode.querySelector('.popup__photos');
+  var photosNode = card.querySelector('.popup__photos');
   eraseNode(photosNode);
   photosNode.appendChild(photosFragment);
 
-  newNode.querySelector('.popup__avatar').src = adv.author.avatar;
-
-  return newNode;
+  card.querySelector('.popup__avatar').src = adv.author.avatar;
 };
 
 
-// Получаем шаблон карточки объявления
-// Создаем карточку с информацией из первого элемента из списка объявлений
-var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-var card = createCardNode(cardTemplate, advertisements[0]);
-// map.insertBefore(card, filterMap);
-
-
 var mapMainPin = document.querySelector('.map__pin');
+// Заполняет поле адреса
+// Использует координаты .map__pin
+var setAddress = function () {
+  var xCoords = mapMainPin.offsetLeft + mapMainPin.offsetWidth / 2;
+  var yCoords = mapMainPin.offsetTop + mapMainPin.offsetHeight / 2;
+  var coordsText = xCoords.toString() + ', ' + yCoords.toString();
+  inputAddress.value = coordsText;
+};
+
+
+// Блок карты
+var map = document.querySelector('.map');
+// Форма объявления
 var formAd = document.querySelector('.ad-form');
+// Группы полей формы объявления
 var fieldsetsFormAd = formAd.querySelectorAll('fieldset');
-var filtersFormMap = document.querySelector('.map__filters');
-var filtersMap = filtersFormMap.children;
-
-var coordsMainPinBegin = (mapMainPin.offsetLeft + mapMainPin.offsetWidth / 2).toString() + ', ' + (mapMainPin.offsetTop + mapMainPin.offsetHeight / 2).toString();
-
-var inputAddress = formAd.querySelector('#address');
-inputAddress.value = coordsMainPinBegin;
+// Форма с фильтрами объявлений
+var formFilterMap = document.querySelector('.map__filters');
+// Фильтры в форме
+var filtersMap = formFilterMap.children;
 
 // Активация форм
 var activatePage = function () {
@@ -314,10 +290,109 @@ var activatePage = function () {
   }
 };
 
-//
+
+// Выгружает pin'ы
+var renderPins = function () {
+  pinMap.appendChild(balloonFragmen);
+};
+
+
+// Заполняет карточку объявления данными и отображает ее
+// @index - целое число, итератор элемента в массиве js-объектов объявлений advertisements
+var showAdCard = function (index) {
+  card.classList.add('hidden');
+  setCard(advertisements[index]);
+  card.classList.remove('hidden');
+};
+
+
+// Контейнер для pin'ов
+var pinMap = map.querySelector('.map__pins');
+
+// Контейнер для формы с фильтрами
+var filterMap = map.querySelector('.map__filters-container');
+
+// Поле адреса
+var inputAddress = formAd.querySelector('#address');
+
+
+// Создаем карточку для объявлений
+map.insertBefore(card, filterMap);
+
+// Кнопка закрытия карточки
+var pinClose = document.querySelector('.popup__close');
+
+
+// Создаем список с номерами файлов для аватарок
+var avatarsList = [];
+for (var i = 1; i <= AVATAR_NUMBER; i++) {
+  avatarsList.push(i);
+}
+// Перемешиваем массив с номерами аватарок
+var avatarsRandomList = shuffleArray(avatarsList);
+
+// Создаем перемешанную копию массива с названиями
+var titlesRandomList = shuffleArray(REALTY_TITLES.slice());
+
+
+// Создаем массив объявлений
+var advertisements = [];
+for (i = 0; i < AD_NUMBER; i++) {
+  advertisements.push(createAd(avatarsRandomList, titlesRandomList, pinMap, Y_BALLOON_CHOORDINATES));
+}
+
+
+// Получаем шаблон balloon'а
+// Создаем фрагмент. Наполняем его элементами и размещаем в контейнере
+var balloonTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var balloonFragmen = document.createDocumentFragment();
+for (i = 0; i < advertisements.length; i++) {
+  balloonFragmen.appendChild(createPin(balloonTemplate, advertisements[i], i));
+}
+
+
+// Задать начальный адрес в input address
+setAddress();
+
+
+// Скрыьте карточки объявления
+var closeCard = function () {
+  card.classList.add('hidden');
+
+  document.removeEventListener('keydown', cardEscPressHandler);
+};
+
+var cardEscPressHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeCard();
+  }
+};
 
 
 mapMainPin.addEventListener('mouseup', function () {
   activatePage();
+  setAddress();
+  renderPins();
 
+  pinMap.addEventListener('click', function (evt) {
+    var obj = evt.currentTarget;
+    var item = evt.target;
+
+    while (item !== obj) {
+      if (item.classList.contains('map__pin') && !item.classList.contains('map__pin--main')) {
+        var pinIndex = item.getAttribute('data-pin-index');
+        showAdCard(pinIndex);
+
+        document.addEventListener('keydown', cardEscPressHandler);
+
+        return;
+      }
+
+      item = item.parentNode;
+    }
+  });
+});
+
+pinClose.addEventListener('click', function () {
+  closeCard();
 });
