@@ -61,7 +61,7 @@ var ESC_KEYCODE = 27;
 /**
  * Возвращает итератор случайного элемента массива
  *
- * @arr    {array} Массив с элементами для выборки
+ * @param  {array} arr Массив с элементами для выборки
  * @return {number} случайное число от 0 до @arr.length
  */
 var getRandomIteratorArray = function (arr) {
@@ -70,8 +70,7 @@ var getRandomIteratorArray = function (arr) {
 
 /**
  * Возвращает массив перемешанный по алгоритму Фишера-Йетса
- *
- * @arr    {array} Массив, который необходимо перемешать
+ * @param  {array} arr Массив, который необходимо перемешать
  * @return {array} Перемешанный массив
  */
 var shuffleArray = function (arr) {
@@ -87,8 +86,8 @@ var shuffleArray = function (arr) {
 /**
  * Возвращает случайное значение между min и max с равномерным распределением
  *
- * @min    {number} Целое число, минимальная граница диапазона для выборки случайного числа
- * @max    {number} Целое число, максимальная граница
+ * @param  {number} min Целое число, минимальная граница диапазона для выборки случайного числа
+ * @param  {number} max Целое число, максимальная граница
  * @return {number} Целое число
  */
 var getRandomBetweenMinMax = function (min, max) {
@@ -98,11 +97,9 @@ var getRandomBetweenMinMax = function (min, max) {
 /**
  * Возвращает url для Аватарки
  *
- * @listOfAvatars {array} Массив (перемешанный) с номерами картинок аватаров (будет извлечен последний элемент из массива)
- * @return        {string} строка с url'ом аватарка вида 'img/avatars/user01.png'
+ * @param  {array} listOfAvatars Массив (перемешанный) с номерами картинок аватаров (будет извлечен последний элемент из массива)
+ * @return {string} строка с url'ом аватарка вида 'img/avatars/user01.png'
  */
-// Возвращает url для Аватарки
-// @listOfAvatars - массив (перемешанный) с номерами картинок аватаров (будет извлечен последний элемент из массива)
 var getAvatar = function (listOfAvatars) {
   if (listOfAvatars.length === 0) {
     return -1;
@@ -122,8 +119,8 @@ var getAvatar = function (listOfAvatars) {
 /**
  * Возвращает строку-заголовок для объявления из массива заголовков
  *
- * @listOfTitles {array} Массив (перемешанный) с названиями (будет извлечен последний элемент из массива)
- * @return       {string} Строка с заголовком для объявления
+ * @param  {array} listOfTitles Массив (перемешанный) с названиями (будет извлечен последний элемент из массива)
+ * @return {string} Строка с заголовком для объявления
  */
 var getTitle = function (listOfTitles) {
   if (listOfTitles.length === 0) {
@@ -138,8 +135,8 @@ var getTitle = function (listOfTitles) {
 /**
  * Возвращает случайное значение от 1 до ширины переданного блока (получение x-координаты для balloon)
  *
- * @container {object} domElement ширина которого будет приниматься за максимальную x-координату
- * @return    {number} Координата X
+ * @param  {object} container domElement ширина которого будет приниматься за максимальную x-координату
+ * @return {number} Координата X
  */
 var getBalloonXCoords = function (container) {
   var containerWidth = container.clientWidth;
@@ -151,11 +148,11 @@ var getBalloonXCoords = function (container) {
 /**
  * Возвращает объект с информацией о новом объявлении
  *
- * @listOfAvatars {array} Массив с номерами от 1 до количества картинок с аватарами для генерации url'а картинки (массив будет уменьшаться на извелеченный элемент, splice)
- * @listOfTitles  {array} Массив строк с названиями объявлений (массив будет уменьшаться на извелеченный элемент, splice)
- * @balloonPlace  {object} domElement в котором будут располагаться balloons
- * @balloonCoords {array} Двумерный массив с верхней и нижней y-координатами balloons
- * @return        {object} Объект-объявления
+ * @param  {array} listOfAvatars Массив с номерами от 1 до количества картинок с аватарами для генерации url'а картинки (массив будет уменьшаться на извелеченный элемент, splice)
+ * @param  {array} listOfTitles Массив строк с названиями объявлений (массив будет уменьшаться на извелеченный элемент, splice)
+ * @param  {object} balloonPlace domElement в котором будут располагаться balloons
+ * @param  {array} balloonCoords Двумерный массив с верхней и нижней y-координатами balloons
+ * @return {object} Объект-объявления
  */
 var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoords) {
   var xLocation = getBalloonXCoords(balloonPlace);
@@ -195,10 +192,10 @@ var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoord
 /**
  * Возвразает domElement balloon'а
  *
- * @template {object} node (разметка balloon'а)
- * @advert   {object} Объект типа объявление, созданный функцией createAd
- * @index    {number} Индекс-номер balloon'а
- * @return   {object} domElement balloon'а
+ * @param  {object} template node (разметка balloon'а)
+ * @param  {object} advert Объект типа объявление, созданный функцией createAd
+ * @param  {number} index Индекс-номер balloon'а
+ * @return {object} domElement balloon'а
  */
 var createPin = function (template, advert, index) {
   var newNode = template.cloneNode(true);
@@ -218,8 +215,8 @@ var createPin = function (template, advert, index) {
 /**
  * Возвращаем domElement <li> с соответствующим удобству css-классом
  *
- * @feature {strung} Строка, название удобства из списка FEATURES
- * @return  {object} domElement <li>
+ * @param  {strung} feature Строка, название удобства из списка FEATURES
+ * @return {object} domElement <li>
  */
 var createFeaturesItemNode = function (feature) {
   var item = document.createElement('li');
@@ -235,8 +232,8 @@ var createFeaturesItemNode = function (feature) {
 /**
  * Возвращает domElement <img>, фотография жилья с необходимым scr
  *
- * @photoSrc {string} Строка, url картинки
- * @return   {object} domElement img
+ * @param  {string} photoSrc Строка, url картинки
+ * @return {object} domElement img
  */
 var createPhoto = function (photoSrc) {
   var item = document.createElement('img');
@@ -252,8 +249,8 @@ var createPhoto = function (photoSrc) {
 /**
  * Возвращает очищенный (без дочерних элементов) domElement
  *
- * node   {object} domElement, у которого необходимо удалить все дочерние элементы
- * return {object} domElement
+ * @param  {object} node domElement, у которого необходимо удалить все дочерние элементы
+ * @return {object} domElement
  */
 var eraseNode = function (node) {
   while (node.firstChild) {
@@ -273,7 +270,7 @@ card.classList.add('hidden');
 /**
  * Заполняет данные в блок объявления .card
  *
- * @adv {object} Объект, содержащий информацию объявления, созданный функцией createAd
+ * @param {object} adv Объект, содержащий информацию объявления, созданный функцией createAd
  */
 var setCard = function (adv) {
   card.querySelector('.popup__title').textContent = adv.offer.title;
@@ -353,7 +350,7 @@ var renderPins = function () {
 /**
  * Заполняет карточку объявления данными и отображает ее
  *
- * @index - целое число, итератор элемента в массиве js-объектов объявлений advertisements
+ * @param {number} index Целое число, итератор элемента в массиве js-объектов объявлений advertisements
  */
 var showAdCard = function (index) {
   card.classList.add('hidden');
