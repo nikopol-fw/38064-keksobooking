@@ -58,15 +58,22 @@ var MAX_GUESTS = 100;
 
 var ESC_KEYCODE = 27;
 
-
-// Возвращает итератор случайного элемента массива
-// @arr - массив с элементами для выборки
+/**
+ * Возвращает итератор случайного элемента массива
+ *
+ * @arr    {array} Массив с элементами для выборки
+ * @return {number} случайное число от 0 до @arr.length
+ */
 var getRandomIteratorArray = function (arr) {
   return Math.floor(Math.random() * arr.length);
 };
 
-// Возвращает массив перемешанный по алгоритму Фишера-Йетса
-// @arr - массив, который необходимо перемешать
+/**
+ * Возвращает массив перемешанный по алгоритму Фишера-Йетса
+ *
+ * @arr    {array} Массив, который необходимо перемешать
+ * @return {array} Перемешанный массив
+ */
 var shuffleArray = function (arr) {
   for (var j = arr.length - 1; j > 0; j--) {
     var rndm = Math.floor(Math.random() * (j + 1));
@@ -77,13 +84,23 @@ var shuffleArray = function (arr) {
   return arr;
 };
 
-// Возвращает случайное значение между min и max с равномерным распределением
-// @min - целое число, минимальная граница диапазона для выборки случайного числа
-// @max - целое число, максимальная граница
+/**
+ * Возвращает случайное значение между min и max с равномерным распределением
+ *
+ * @min    {number} Целое число, минимальная граница диапазона для выборки случайного числа
+ * @max    {number} Целое число, максимальная граница
+ * @return {number} Целое число
+ */
 var getRandomBetweenMinMax = function (min, max) {
   return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 };
 
+/**
+ * Возвращает url для Аватарки
+ *
+ * @listOfAvatars {array} Массив (перемешанный) с номерами картинок аватаров (будет извлечен последний элемент из массива)
+ * @return        {string} строка с url'ом аватарка вида 'img/avatars/user01.png'
+ */
 // Возвращает url для Аватарки
 // @listOfAvatars - массив (перемешанный) с номерами картинок аватаров (будет извлечен последний элемент из массива)
 var getAvatar = function (listOfAvatars) {
@@ -102,19 +119,28 @@ var getAvatar = function (listOfAvatars) {
   return imgUrl;
 };
 
-// Возвращает строку-заголовок для объявления из массива заголовков
-// @listOfTitles - массив (перемешанный) с названиями (будет извлечен последний элемент из массива)
+/**
+ * Возвращает строку-заголовок для объявления из массива заголовков
+ *
+ * @listOfTitles {array} Массив (перемешанный) с названиями (будет извлечен последний элемент из массива)
+ * @return       {string} Строка с заголовком для объявления
+ */
 var getTitle = function (listOfTitles) {
   if (listOfTitles.length === 0) {
     return -1;
   }
 
   var newTitle = listOfTitles.pop();
+  newTitle.toString();
   return newTitle;
 };
 
-// Возвращает случайное значение от 1 до ширины переданного блока (получение x-координаты для balloon)
-// @container - domElement ширина которого будет приниматься за максимальную x-координату
+/**
+ * Возвращает случайное значение от 1 до ширины переданного блока (получение x-координаты для balloon)
+ *
+ * @container {object} domElement ширина которого будет приниматься за максимальную x-координату
+ * @return    {number} Координата X
+ */
 var getBalloonXCoords = function (container) {
   var containerWidth = container.clientWidth;
   var newCoord = getRandomBetweenMinMax(1, containerWidth);
@@ -122,11 +148,15 @@ var getBalloonXCoords = function (container) {
   return newCoord;
 };
 
-// Возвращает объект с информацией о новом объявлении
-// @listOfAvatars - массив с номерами от 1 до количества картинок с аватарами для генерации url'а картинки (массив будет уменьшаться на извелеченный элемент, splice)
-// @listOfTitles - массив строк с названиями объявлений (массив будет уменьшаться на извелеченный элемент, splice)
-// @balloonPlace - domElement в котором будут располагаться balloons
-// @balloonCoords - двумерный массив с верхней и нижней y-координатами balloons
+/**
+ * Возвращает объект с информацией о новом объявлении
+ *
+ * @listOfAvatars {array} Массив с номерами от 1 до количества картинок с аватарами для генерации url'а картинки (массив будет уменьшаться на извелеченный элемент, splice)
+ * @listOfTitles  {array} Массив строк с названиями объявлений (массив будет уменьшаться на извелеченный элемент, splice)
+ * @balloonPlace  {object} domElement в котором будут располагаться balloons
+ * @balloonCoords {array} Двумерный массив с верхней и нижней y-координатами balloons
+ * @return        {object} Объект-объявления
+ */
 var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoords) {
   var xLocation = getBalloonXCoords(balloonPlace);
   var yLocation = getRandomBetweenMinMax(balloonCoords[0], balloonCoords[1]) - BALLOON_HEIGHT;
@@ -162,9 +192,14 @@ var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoord
   return newAd;
 };
 
-// Возвразает domElement balloon'а
-// @template - node (разметка balloon'а)
-// @advert - объект типа объявление, созданный функцией createAd
+/**
+ * Возвразает domElement balloon'а
+ *
+ * @template {object} node (разметка balloon'а)
+ * @advert   {object} Объект типа объявление, созданный функцией createAd
+ * @index    {number} Индекс-номер balloon'а
+ * @return   {object} domElement balloon'а
+ */
 var createPin = function (template, advert, index) {
   var newNode = template.cloneNode(true);
   var newNodeImg = newNode.querySelector('img');
@@ -175,13 +210,17 @@ var createPin = function (template, advert, index) {
   newNodeImg.src = advert.author.avatar;
   newNodeImg.alt = advert.offer.title;
 
-  newNode.setAttribute('data-pin-index', index);
+  newNode.dataset.pinIndex = index;
 
   return newNode;
 };
 
-// Возвращаем domElement <li> с соответствующим удобству css-классом
-// @feature - строка, название удобства из списка FEATURES
+/**
+ * Возвращаем domElement <li> с соответствующим удобству css-классом
+ *
+ * @feature {strung} Строка, название удобства из списка FEATURES
+ * @return  {object} domElement <li>
+ */
 var createFeaturesItemNode = function (feature) {
   var item = document.createElement('li');
   item.classList.add('popup__feature');
@@ -193,8 +232,12 @@ var createFeaturesItemNode = function (feature) {
   return item;
 };
 
-// Возвращает domElement <img>, фотография жилья с необходимым scr
-// @photoSrc - строка, url картинки
+/**
+ * Возвращает domElement <img>, фотография жилья с необходимым scr
+ *
+ * @photoSrc {string} Строка, url картинки
+ * @return   {object} domElement img
+ */
 var createPhoto = function (photoSrc) {
   var item = document.createElement('img');
   item.src = photoSrc;
@@ -206,8 +249,12 @@ var createPhoto = function (photoSrc) {
   return item;
 };
 
-// Возвращает очищенный (без дочерних элементов) domElement
-// node - domElement, у которого необходимо удалить все дочерние элементы
+/**
+ * Возвращает очищенный (без дочерних элементов) domElement
+ *
+ * node   {object} domElement, у которого необходимо удалить все дочерние элементы
+ * return {object} domElement
+ */
 var eraseNode = function (node) {
   while (node.firstChild) {
     node.removeChild(node.firstChild);
@@ -223,8 +270,11 @@ var cardTemplate = document.querySelector('#card').content.querySelector('.map__
 var card = cardTemplate.cloneNode(true);
 card.classList.add('hidden');
 
-// Заполняет данные в блок объявления .card
-// @adv - объект, содержащий информацию объявления, созданный функцией createAd
+/**
+ * Заполняет данные в блок объявления .card
+ *
+ * @adv {object} Объект, содержащий информацию объявления, созданный функцией createAd
+ */
 var setCard = function (adv) {
   card.querySelector('.popup__title').textContent = adv.offer.title;
   card.querySelector('.popup__text--address').textContent = adv.offer.address;
@@ -256,8 +306,10 @@ var setCard = function (adv) {
 
 
 var mapMainPin = document.querySelector('.map__pin');
-// Заполняет поле адреса
-// Использует координаты .map__pin
+/**
+ * Заполняет поле адреса
+ * Использует координаты .map__pin
+ */
 var setAddress = function () {
   var xCoords = mapMainPin.offsetLeft + mapMainPin.offsetWidth / 2;
   var yCoords = mapMainPin.offsetTop + mapMainPin.offsetHeight / 2;
@@ -277,15 +329,16 @@ var formFilterMap = document.querySelector('.map__filters');
 // Фильтры в форме
 var filtersMap = formFilterMap.children;
 
-// Активация форм
+// Активирует страницу
 var activatePage = function () {
   map.classList.remove('map--faded');
   formAd.classList.remove('ad-form--disabled');
-  for (var j = 0; j < fieldsetsFormAd.length; j++) {
-    fieldsetsFormAd[j].disabled = false;
-  }
 
-  for (j = 0; j < filtersMap.length; j++) {
+  fieldsetsFormAd.forEach(function (item) {
+    item.disabled = false;
+  });
+
+  for (var j = 0; j < filtersMap.length; j++) {
     filtersMap[j].disabled = false;
   }
 };
@@ -297,8 +350,11 @@ var renderPins = function () {
 };
 
 
-// Заполняет карточку объявления данными и отображает ее
-// @index - целое число, итератор элемента в массиве js-объектов объявлений advertisements
+/**
+ * Заполняет карточку объявления данными и отображает ее
+ *
+ * @index - целое число, итератор элемента в массиве js-объектов объявлений advertisements
+ */
 var showAdCard = function (index) {
   card.classList.add('hidden');
   setCard(advertisements[index]);
@@ -355,7 +411,7 @@ for (i = 0; i < advertisements.length; i++) {
 setAddress();
 
 
-// Скрыьте карточки объявления
+// Скрывает карточку объявления
 var closeCard = function () {
   card.classList.add('hidden');
 
