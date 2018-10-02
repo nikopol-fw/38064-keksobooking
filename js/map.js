@@ -148,10 +148,10 @@ var getBalloonXCoords = function (container) {
 /**
  * Возвращает объект с информацией о новом объявлении
  *
- * @param  {array} listOfAvatars Массив с номерами от 1 до количества картинок с аватарами для генерации url'а картинки (массив будет уменьшаться на извелеченный элемент, splice)
- * @param  {array} listOfTitles Массив строк с названиями объявлений (массив будет уменьшаться на извелеченный элемент, splice)
+ * @param  {array}  listOfAvatars Массив с номерами от 1 до количества картинок с аватарами для генерации url'а картинки (массив будет уменьшаться на извелеченный элемент, splice)
+ * @param  {array}  listOfTitles Массив строк с названиями объявлений (массив будет уменьшаться на извелеченный элемент, splice)
  * @param  {object} balloonPlace domElement в котором будут располагаться balloons
- * @param  {array} balloonCoords Двумерный массив с верхней и нижней y-координатами balloons
+ * @param  {array}  balloonCoords Двумерный массив с верхней и нижней y-координатами balloons
  * @return {object} Объект-объявления
  */
 var createAd = function (listOfAvatars, listOfTitles, balloonPlace, balloonCoords) {
@@ -448,4 +448,84 @@ mapMainPin.addEventListener('mouseup', function () {
 
 pinClose.addEventListener('click', function () {
   closeCard();
+});
+
+
+var selectTypeRealty = formAd.querySelector('#type');
+var inputPrice = formAd.querySelector('#price');
+/**
+ * Задает атрибут min и placeholder полю #price цена за ночь
+ * В зависимости от переданного значения select'a #type Тип жилья
+ *
+ * @param {string} realty атрибут value select'a #type
+ */
+var setInputPrice = function (realty) {
+  var minPrices = {
+    bungalo: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 10000
+  };
+
+  inputPrice.min = minPrices[realty];
+  inputPrice.placeholder = minPrices[realty];
+};
+
+setInputPrice(selectTypeRealty.value);
+
+selectTypeRealty.addEventListener('change', function (evt) {
+  setInputPrice(evt.target.value);
+});
+
+
+var selectTimeIn = formAd.querySelector('#timein');
+var selectTimeOut = formAd.querySelector('#timeout');
+
+/**
+ * Задает переданному select'у переданное значение
+ * @param {object} select domElement select которому нужно задать такой же value
+ * @param {string} val    value select'a который нужно задать другому select
+ */
+var setTimeInOut = function (select, val) {
+  select.value = val;
+};
+
+selectTimeIn.addEventListener('change', function (evt) {
+  setTimeInOut(selectTimeOut, evt.target.value);
+});
+
+selectTimeOut.addEventListener('change', function (evt) {
+  setTimeInOut(selectTimeIn, evt.target.value);
+});
+
+
+var selectRoomNumber = formAd.querySelector('#room_number');
+var selectCapacity = formAd.querySelector('#capacity');
+/**
+ * Проверяет соответствие полей количества комнат и гостей и задает кастомную соответствующую валидацию
+ */
+var chechRooms = function () {
+  if (selectRoomNumber.value === '100') {
+    if (selectCapacity.value !== '0') {
+      selectCapacity.setCustomValidity('100 комнат явно не для гостей, не так ли?');
+    } else {
+      selectCapacity.setCustomValidity('');
+    }
+  } else {
+    if (Number(selectRoomNumber.value) < Number(selectCapacity.value)) {
+      selectCapacity.setCustomValidity('Количество гостей не должно превышать количество комнат');
+    } else {
+      selectCapacity.setCustomValidity('');
+    }
+  }
+};
+
+chechRooms();
+
+selectRoomNumber.addEventListener('change', function () {
+  chechRooms();
+});
+
+selectCapacity.addEventListener('change', function () {
+  chechRooms();
 });
