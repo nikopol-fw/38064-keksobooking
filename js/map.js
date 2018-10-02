@@ -504,28 +504,27 @@ var selectCapacity = formAd.querySelector('#capacity');
 /**
  * Проверяет соответствие полей количества комнат и гостей и задает кастомную соответствующую валидацию
  */
-var chechRooms = function () {
+var checkRooms = function () {
+  selectCapacity.setCustomValidity('');
   if (selectRoomNumber.value === '100') {
     if (selectCapacity.value !== '0') {
       selectCapacity.setCustomValidity('100 комнат явно не для гостей, не так ли?');
-    } else {
-      selectCapacity.setCustomValidity('');
     }
   } else {
-    if (Number(selectRoomNumber.value) < Number(selectCapacity.value)) {
+    if (selectCapacity.value === '0') {
+      selectCapacity.setCustomValidity('Не для гостей нужно много комнат');
+    } else if (Number(selectRoomNumber.value) < Number(selectCapacity.value)) {
       selectCapacity.setCustomValidity('Количество гостей не должно превышать количество комнат');
-    } else {
-      selectCapacity.setCustomValidity('');
     }
   }
 };
 
-chechRooms();
+checkRooms();
 
 selectRoomNumber.addEventListener('change', function () {
-  chechRooms();
+  checkRooms();
 });
 
 selectCapacity.addEventListener('change', function () {
-  chechRooms();
+  checkRooms();
 });
