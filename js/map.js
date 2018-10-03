@@ -422,29 +422,91 @@ var cardEscPressHandler = function (evt) {
 };
 
 
-mapMainPin.addEventListener('mouseup', function () {
-  activatePage();
-  setAddress();
-  renderPins();
+var moveMainPin = function (shift) {
+  var newCoords = {
+    x: mapMainPin.offsetLeft - shift.x,
+    y: mapMainPin.offsetTop - shift.y
+  };
 
-  pinMap.addEventListener('click', function (evt) {
-    var obj = evt.currentTarget;
-    var item = evt.target;
+  var xMin = 0 - mapMainPin.clientWidth / 2;
+  var xMax = pinMap.clientWidth - mapMainPin.clientWidth / 2;
+  if (newCoords.x < xMin) {
+    newCoords.x = xMin;
+  }
+  if (newCoords.x > xMax) {
+    newCoords.x = xMax;
+  }
 
-    while (item !== obj) {
-      if (item.classList.contains('map__pin') && !item.classList.contains('map__pin--main')) {
-        var pinIndex = item.getAttribute('data-pin-index');
-        showAdCard(pinIndex);
+  var yMin = Y_BALLOON_CHOORDINATES[0] + mapMainPin.clientHeight / 2;
+  var yMax = Y_BALLOON_CHOORDINATES[1] + mapMainPin.clientHeight / 2;
 
-        document.addEventListener('keydown', cardEscPressHandler);
+  if (newCoords.y < yMin) {
+    newCoords.y = yMin;
+  }
 
-        return;
+  if (newCoords.y > yMax) {
+    newCoords.y = yMax;
+  }
+
+  mapMainPin.style.top = (newCoords.y) + 'px';
+  mapMainPin.style.left = (newCoords.x) + 'px';
+};
+
+var mouseDownMainPinHandler = function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var mouseMoveHandler = function (movEvt) {
+    var shift = {
+      x: startCoords.x - movEvt.clientX,
+      y: startCoords.y - movEvt.clientY
+    };
+
+    startCoords = {
+      x: movEvt.clientX,
+      y: movEvt.clientY
+    };
+
+    moveMainPin(shift);
+  };
+
+  var mouseUpHandler = function () {
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
+
+    activatePage();
+    setAddress();
+    renderPins();
+
+    pinMap.addEventListener('click', function (clickEvt) {
+      var obj = clickEvt.currentTarget;
+      var item = clickEvt.target;
+
+      while (item !== obj) {
+        if (item.classList.contains('map__pin') && !item.classList.contains('map__pin--main')) {
+          var pinIndex = item.getAttribute('data-pin-index');
+          showAdCard(pinIndex);
+
+          document.addEventListener('keydown', cardEscPressHandler);
+
+          return;
+        }
+
+        item = item.parentNode;
       }
+    });
+  };
 
-      item = item.parentNode;
-    }
-  });
-});
+  document.addEventListener('mousemove', mouseMoveHandler);
+  document.addEventListener('mouseup', mouseUpHandler);
+};
+
+mapMainPin.addEventListener('mousedown', mouseDownMainPinHandler);
+
 
 pinClose.addEventListener('click', function () {
   closeCard();
