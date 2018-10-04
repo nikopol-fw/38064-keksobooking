@@ -437,8 +437,8 @@ var moveMainPin = function (shift) {
     newCoords.x = xMax;
   }
 
-  var yMin = Y_BALLOON_CHOORDINATES[0] + mapMainPin.clientHeight / 2;
-  var yMax = Y_BALLOON_CHOORDINATES[1] + mapMainPin.clientHeight / 2;
+  var yMin = Y_BALLOON_CHOORDINATES[0] - mapMainPin.clientHeight;
+  var yMax = Y_BALLOON_CHOORDINATES[1] - mapMainPin.clientHeight;
 
   if (newCoords.y < yMin) {
     newCoords.y = yMin;
