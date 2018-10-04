@@ -309,7 +309,7 @@ var mapMainPin = document.querySelector('.map__pin');
  */
 var setAddress = function () {
   var xCoords = mapMainPin.offsetLeft + mapMainPin.offsetWidth / 2;
-  var yCoords = mapMainPin.offsetTop + mapMainPin.offsetHeight / 2;
+  var yCoords = mapMainPin.offsetTop + mapMainPin.offsetHeight;
   var coordsText = xCoords.toString() + ', ' + yCoords.toString();
   inputAddress.value = coordsText;
 };
