@@ -28,13 +28,13 @@
   // Получаем шаблон balloon'а
   // Создаем фрагмент. Наполняем его элементами и размещаем в контейнере
   var balloonTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var balloonFragmen = document.createDocumentFragment();
+  var balloonFragment = document.createDocumentFragment();
   for (var i = 0; i < window.data.adverts.length; i++) {
-    balloonFragmen.appendChild(createPin(balloonTemplate, window.data.adverts[i], i));
+    balloonFragment.appendChild(createPin(balloonTemplate, window.data.adverts[i], i));
   }
 
 
   window.pin = {
-    balloons: balloonFragmen
+    balloons: balloonFragment
   };
 })();
