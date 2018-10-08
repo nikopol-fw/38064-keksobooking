@@ -24,6 +24,12 @@
     return newNode;
   };
 
+  // Устанавливает главный pin в стартовую позицию
+  var resetPosMainPin = function () {
+    window.data.mainPin.style.top = window.data.beginCoordsMainPin[0] + 'px';
+    window.data.mainPin.style.left = window.data.beginCoordsMainPin[1] + 'px';
+  };
+
 
   // Получаем шаблон balloon'а
   // Создаем фрагмент. Наполняем его элементами и размещаем в контейнере
@@ -35,6 +41,7 @@
 
 
   window.pin = {
-    balloons: balloonFragment
+    balloons: balloonFragment,
+    resetPosMainPin: resetPosMainPin
   };
 })();

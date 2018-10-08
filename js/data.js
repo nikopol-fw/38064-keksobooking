@@ -207,7 +207,9 @@
   // Контейнер для pin'ов
   var pinMap = map.querySelector('.map__pins');
   // Основной pin, который перетаскивается
-  var mainPin = document.querySelector('.map__pin');
+  var mainPin = document.querySelector('.map__pin--main');
+  // Начальные координаты основного pin
+  var beginCoordsMainPin = [mainPin.offsetTop, mainPin.offsetLeft];
 
   // Создаем массив объявлений
   var adverts = [];
@@ -234,6 +236,7 @@
     map: map,
     pinMap: pinMap,
     mainPin: mainPin,
+    beginCoordsMainPin: beginCoordsMainPin,
     formAdv: formAdv,
     formAdvFieldsets: formAdvFieldsets,
     filters: filters,

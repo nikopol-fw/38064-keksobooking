@@ -113,6 +113,13 @@
   });
 
 
+  window.data.formAdv.addEventListener('reset', function (evt) {
+    window.card.closeCard();
+    window.pin.resetPosMainPin();
+    setAddress();
+  });
+
+
   window.form = {
     setAddress: setAddress,
     activatePage: activatePage

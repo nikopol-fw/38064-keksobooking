@@ -6,31 +6,6 @@
     window.data.pinMap.appendChild(window.pin.balloons);
   };
 
-  /**
-   * Заполняет карточку объявления данными и отображает ее
-   *
-   * @param {number} index Целое число, итератор элемента в массиве js-объектов объявлений advertisements
-   */
-  var showAdCard = function (index) {
-    window.card.cardPanel.classList.add('hidden');
-    window.card.setCard(window.data.adverts[index]);
-    window.card.cardPanel.classList.remove('hidden');
-  };
-
-  // Скрывает карточку объявления
-  var closeCard = function () {
-    window.card.cardPanel.classList.add('hidden');
-
-    document.removeEventListener('keydown', cardEscPressHandler);
-  };
-
-
-  var cardEscPressHandler = function (evt) {
-    if (evt.keyCode === window.data.ESC_KEYCODE) {
-      closeCard();
-    }
-  };
-
   var moveMainPin = function (shift) {
     var newCoords = {
       x: window.data.mainPin.offsetLeft - shift.x,
@@ -98,9 +73,9 @@
         while (item !== obj) {
           if (item.classList.contains('map__pin') && !item.classList.contains('map__pin--main')) {
             var pinIndex = item.getAttribute('data-pin-index');
-            showAdCard(pinIndex);
+            window.card.showCard(pinIndex);
 
-            document.addEventListener('keydown', cardEscPressHandler);
+            document.addEventListener('keydown', window.card.cardEscPressHandler);
 
             return;
           }
@@ -118,6 +93,6 @@
 
 
   window.card.pinClose.addEventListener('click', function () {
-    closeCard();
+    window.card.closeCard();
   });
 })();
