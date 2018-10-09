@@ -1,10 +1,13 @@
 'use strict';
 
 (function () {
+  /*
   // Выгружает pin'ы
   var renderPins = function () {
     window.data.pinMap.appendChild(window.pin.balloons);
   };
+  */
+
 
   var moveMainPin = function (shift) {
     var newCoords = {
@@ -36,6 +39,7 @@
     window.data.mainPin.style.left = (newCoords.x) + 'px';
   };
 
+
   var mouseDownMainPinHandler = function (evt) {
     evt.preventDefault();
 
@@ -62,9 +66,31 @@
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
 
-      window.form.activatePage();
+      var loadSuccessHandler = function (response) {
+        window.data.page.pinLoaded = true;
+        window.data.adverts = response;
+
+        var pinFragment = document.createDocumentFragment();
+        for (var j = 0; j < window.data.adverts.length; j++) {
+          pinFragment.appendChild(window.pin.createPin(window.pin.pinTemplate, window.data.adverts[j], j));
+        }
+        window.data.pinMap.appendChild(pinFragment);
+      };
+
+      var loadErrorHandler = function () {
+        // console.log(response);
+      };
+
+      if (!window.data.page.active) {
+        window.form.activatePage();
+
+        window.backend.load(loadSuccessHandler, loadErrorHandler);
+      } else if (!window.data.page.pinLoaded) {
+        window.backend.load(loadSuccessHandler, loadErrorHandler);
+      }
+
       window.form.setAddress();
-      renderPins();
+
 
       window.data.pinMap.addEventListener('click', function (clickEvt) {
         var obj = clickEvt.currentTarget;

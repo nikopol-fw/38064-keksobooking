@@ -92,7 +92,7 @@
 
   var cardEscPressHandler = function (evt) {
     if (evt.keyCode === window.data.ESC_KEYCODE) {
-      window.card.closeCard();
+      closeCard();
     }
   };
 
@@ -127,6 +127,7 @@
     pinClose: pinClose,
     setCard: setCard,
     showCard: showCard,
-    closeCard: closeCard
+    closeCard: closeCard,
+    cardEscPressHandler: cardEscPressHandler
   };
 })();
