@@ -24,17 +24,25 @@
     return newNode;
   };
 
+  // Устанавливает главный pin в стартовую позицию
+  var resetPosMainPin = function () {
+    window.data.mainPin.style.top = window.data.beginCoordsMainPin[0] + 'px';
+    window.data.mainPin.style.left = window.data.beginCoordsMainPin[1] + 'px';
+  };
+
 
   // Получаем шаблон balloon'а
   // Создаем фрагмент. Наполняем его элементами и размещаем в контейнере
-  var balloonTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var balloonFragment = document.createDocumentFragment();
-  for (var i = 0; i < window.data.adverts.length; i++) {
-    balloonFragment.appendChild(createPin(balloonTemplate, window.data.adverts[i], i));
-  }
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  //  var balloonFragment = document.createDocumentFragment();
+  //  for (var i = 0; i < window.data.adverts.length; i++) {
+  //    balloonFragment.appendChild(createPin(balloonTemplate, window.data.adverts[i], i));
+  //  }
 
 
   window.pin = {
-    balloons: balloonFragment
+    pinTemplate: pinTemplate,
+    createPin: createPin,
+    resetPosMainPin: resetPosMainPin
   };
 })();

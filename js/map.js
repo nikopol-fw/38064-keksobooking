@@ -1,35 +1,13 @@
 'use strict';
 
 (function () {
+  /*
   // Выгружает pin'ы
   var renderPins = function () {
     window.data.pinMap.appendChild(window.pin.balloons);
   };
+  */
 
-  /**
-   * Заполняет карточку объявления данными и отображает ее
-   *
-   * @param {number} index Целое число, итератор элемента в массиве js-объектов объявлений advertisements
-   */
-  var showAdCard = function (index) {
-    window.card.cardPanel.classList.add('hidden');
-    window.card.setCard(window.data.adverts[index]);
-    window.card.cardPanel.classList.remove('hidden');
-  };
-
-  // Скрывает карточку объявления
-  var closeCard = function () {
-    window.card.cardPanel.classList.add('hidden');
-
-    document.removeEventListener('keydown', cardEscPressHandler);
-  };
-
-
-  var cardEscPressHandler = function (evt) {
-    if (evt.keyCode === window.data.ESC_KEYCODE) {
-      closeCard();
-    }
-  };
 
   var moveMainPin = function (shift) {
     var newCoords = {
@@ -61,6 +39,7 @@
     window.data.mainPin.style.left = (newCoords.x) + 'px';
   };
 
+
   var mouseDownMainPinHandler = function (evt) {
     evt.preventDefault();
 
@@ -87,9 +66,31 @@
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
 
-      window.form.activatePage();
+      var loadSuccessHandler = function (response) {
+        window.data.page.pinLoaded = true;
+        window.data.adverts = response;
+
+        var pinFragment = document.createDocumentFragment();
+        for (var j = 0; j < window.data.adverts.length; j++) {
+          pinFragment.appendChild(window.pin.createPin(window.pin.pinTemplate, window.data.adverts[j], j));
+        }
+        window.data.pinMap.appendChild(pinFragment);
+      };
+
+      var loadErrorHandler = function () {
+        // console.log(response);
+      };
+
+      if (!window.data.page.active) {
+        window.form.activatePage();
+
+        window.backend.load(loadSuccessHandler, loadErrorHandler);
+      } else if (!window.data.page.pinLoaded) {
+        window.backend.load(loadSuccessHandler, loadErrorHandler);
+      }
+
       window.form.setAddress();
-      renderPins();
+
 
       window.data.pinMap.addEventListener('click', function (clickEvt) {
         var obj = clickEvt.currentTarget;
@@ -98,9 +99,9 @@
         while (item !== obj) {
           if (item.classList.contains('map__pin') && !item.classList.contains('map__pin--main')) {
             var pinIndex = item.getAttribute('data-pin-index');
-            showAdCard(pinIndex);
+            window.card.showCard(pinIndex);
 
-            document.addEventListener('keydown', cardEscPressHandler);
+            document.addEventListener('keydown', window.card.cardEscPressHandler);
 
             return;
           }
@@ -118,6 +119,6 @@
 
 
   window.card.pinClose.addEventListener('click', function () {
-    closeCard();
+    window.card.closeCard();
   });
 })();

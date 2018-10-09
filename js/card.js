@@ -90,6 +90,31 @@
     cardPanel.querySelector('.popup__avatar').src = adv.author.avatar;
   };
 
+  var cardEscPressHandler = function (evt) {
+    if (evt.keyCode === window.data.ESC_KEYCODE) {
+      closeCard();
+    }
+  };
+
+    /**
+   * Заполняет карточку объявления данными и отображает ее
+   *
+   * @param {number} index Целое число, итератор элемента в массиве js-объектов объявлений advertisements
+   */
+  var showCard = function (index) {
+    window.card.cardPanel.classList.add('hidden');
+    window.card.setCard(window.data.adverts[index]);
+    window.card.cardPanel.classList.remove('hidden');
+  };
+
+  // Скрывает карточку объявления
+  var closeCard = function () {
+    window.card.cardPanel.classList.add('hidden');
+
+    document.removeEventListener('keydown', cardEscPressHandler);
+  };
+
+
   // Создаем карточку для объявлений
   window.data.map.insertBefore(cardPanel, window.data.filterMap);
 
@@ -100,6 +125,9 @@
   window.card = {
     cardPanel: cardPanel,
     pinClose: pinClose,
-    setCard: setCard
+    setCard: setCard,
+    showCard: showCard,
+    closeCard: closeCard,
+    cardEscPressHandler: cardEscPressHandler
   };
 })();
