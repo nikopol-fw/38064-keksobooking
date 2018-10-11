@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var inputTitle = form.querySelector('#title');
@@ -16,6 +15,8 @@
   var inputAvatar = form.querySelector('#avatar');
   var inputImages = form.querySelector('#images');
   var checkBoxsFeatures = form.querySelectorAll('.features input[name=features]');
+
+  var filters = window.data.filters.children;
 
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
@@ -43,8 +44,8 @@
       item.disabled = false;
     });
 
-    for (var j = 0; j < window.data.filters; j++) {
-      window.data.filters[j].disabled = false;
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].disabled = false;
     }
   };
 

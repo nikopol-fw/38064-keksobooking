@@ -70,11 +70,9 @@
         window.data.page.pinLoaded = true;
         window.data.adverts = response;
 
-        var pinFragment = document.createDocumentFragment();
-        for (var j = 0; j < window.data.adverts.length; j++) {
-          pinFragment.appendChild(window.pin.createPin(window.pin.pinTemplate, window.data.adverts[j], j));
-        }
-        window.data.pinMap.appendChild(pinFragment);
+        window.pin.renderPins(window.data.adverts);
+
+        // console.log(window.data.adverts);
       };
 
       var loadErrorHandler = function () {

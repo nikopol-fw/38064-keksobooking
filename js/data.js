@@ -239,6 +239,10 @@
   var mainPin = document.querySelector('.map__pin--main');
   // Начальные координаты основного pin
   var beginCoordsMainPin = [mainPin.offsetTop, mainPin.offsetLeft];
+  // Форма объявления
+
+  // Форма фильтров
+  var filterForm = document.querySelector('.map__filters');
 
 
   // Форма объявления
@@ -246,15 +250,18 @@
   // Группы полей формы объявления
   var formAdvFieldsets = formAdv.querySelectorAll('fieldset');
   // Форма с фильтрами объявлений
-  var formFilters = document.querySelector('.map__filters');
+  // var formFilters = document.querySelector('.map__filters');
   // Фильтры в форме
-  var filters = formFilters.children;
+  // var filters = formFilters.children;
   // Контейнер для формы с фильтрами
   var filterMap = map.querySelector('.map__filters-container');
   // Поле адреса
   var formAdvInputAddress = formAdv.querySelector('#address');
 
   window.data = {
+
+    filters: filterForm,
+
     page: page,
     ESC_KEYCODE: ESC_KEYCODE,
     Y_BALLOON_CHOORDINATES: Y_BALLOON_CHOORDINATES,
@@ -264,9 +271,10 @@
     beginCoordsMainPin: beginCoordsMainPin,
     formAdv: formAdv,
     formAdvFieldsets: formAdvFieldsets,
-    filters: filters,
+    // filters: filters,
     filterMap: filterMap,
     formAdvInputAddress: formAdvInputAddress,
+    // Объявления
     adverts: undefined
   };
 })();
