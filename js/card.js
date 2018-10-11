@@ -65,7 +65,7 @@
     cardPanel.querySelector('.popup__title').textContent = adv.offer.title;
     cardPanel.querySelector('.popup__text--address').textContent = adv.offer.address;
     cardPanel.querySelector('.popup__text--price').textContent = adv.offer.price.toString() + ' ₽/ночь';
-    cardPanel.querySelector('.popup__type').textContent = adv.offer.type;
+    cardPanel.querySelector('.popup__type').textContent = window.data.realtyTypeToDesc[adv.offer.type];
     cardPanel.querySelector('.popup__text--capacity').textContent = adv.offer.rooms.toString() + ' комнаты для ' + adv.offer.guests.toString() + ' гостей';
     cardPanel.querySelector('.popup__text--time').textContent = 'Заезд после ' + adv.offer.checkin + ', выезд до ' + adv.offer.checkout;
 

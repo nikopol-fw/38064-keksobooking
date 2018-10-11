@@ -69,6 +69,13 @@
     pinLoaded: false
   };
 
+  var realtyTypeToDesc = {
+    palace: 'Дворец',
+    flat: 'Квартира',
+    house: 'Дом',
+    bungalo: 'Бунгало'
+  };
+
   /**
    * Возвращает итератор случайного элемента массива
    *
@@ -274,6 +281,9 @@
     // filters: filters,
     filterMap: filterMap,
     formAdvInputAddress: formAdvInputAddress,
+
+
+    realtyTypeToDesc: realtyTypeToDesc,
     // Объявления
     adverts: undefined
   };
