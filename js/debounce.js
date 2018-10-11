@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  window.debounce = function (interval, func) {
+  window.debounce = function (func, interval) {
     var lastTimeout = null;
 
     return function () {

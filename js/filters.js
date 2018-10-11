@@ -63,21 +63,16 @@
     return advFiltered;
   };
 
+  var filterPins = window.debounce(function () {
+    var filteredAdverts = filterAdverts();
+    window.pin.clearPins();
+    window.pin.renderPins(filteredAdverts);
+  }, 500);
+
 
   window.data.filters.addEventListener('change', function () {
     if (window.data.adverts) {
-
-      /*
-      window.debounce(500, function () {
-      var filteredAdverts = filterAdverts();
-      window.pin.clearPins();
-      window.pin.renderPins(filteredAdverts);
-      });
-      */
-
-      var filteredAdverts = filterAdverts();
-      window.pin.clearPins();
-      window.pin.renderPins(filteredAdverts);
+      filterPins();
     }
   });
 })();
