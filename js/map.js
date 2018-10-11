@@ -70,9 +70,12 @@
         window.data.page.pinLoaded = true;
         window.data.adverts = response;
 
-        window.pin.renderPins(window.data.adverts);
+        // Добавляем индексы каждому объявлению
+        window.data.adverts.forEach(function (item, index) {
+          item.id = index;
+        });
 
-        // console.log(window.data.adverts);
+        window.pin.renderPins(window.data.adverts);
       };
 
       var loadErrorHandler = function () {

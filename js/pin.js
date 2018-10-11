@@ -28,8 +28,8 @@
 
   var renderPins = function (adverts) {
     var pinFragment = document.createDocumentFragment();
-    adverts.forEach(function (item, index) {
-      pinFragment.appendChild(createPin(pinTemplate, item, index));
+    adverts.forEach(function (item) {
+      pinFragment.appendChild(createPin(pinTemplate, item, item.id));
     });
     window.data.pinMap.appendChild(pinFragment);
   };
