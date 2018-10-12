@@ -37,7 +37,11 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      onLoad(xhr.response);
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('При отправке данных произошла ошибка.', 'Статус ответа: ' + xhr.status);
+      }
     });
 
     xhr.addEventListener('error', function () {

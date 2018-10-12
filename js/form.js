@@ -189,20 +189,40 @@
   };
 
 
-  var submitErrorHandler = function (response) {
+  var submitErrorHandler = function (response, description) {
     var errorNode = errorTemplate.cloneNode(true);
-    errorNode.querySelector('.error__message').textContent = response;
+    var errorTextNode = errorNode.querySelector('.error__message');
+    var message = response;
+
+    if (description) {
+      message += '<br>' + description;
+    }
+    errorTextNode.innerHTML = message;
     window.data.mainNode.appendChild(errorNode);
-    var errorBtn = errorNode.querySelector('.error__button');
 
     var closeErrorMessage = function () {
-      errorBtn.removeEventListener('click', closeErrorMessage);
+      document.removeEventListener('click', errorMessageClickHandler);
+      document.removeEventListener('keydown', errorMessageEscPressHandler);
+
       window.data.mainNode.removeChild(errorNode);
       errorNode = null;
     };
 
-    errorBtn.addEventListener('click', closeErrorMessage);
+    var errorMessageClickHandler = function () {
+      closeErrorMessage();
+    };
+
+    var errorMessageEscPressHandler = function (evt) {
+      evt.preventDefault();
+      if (evt.keyCode === window.data.ESC_KEYCODE) {
+        closeErrorMessage();
+      }
+    };
+
+    document.addEventListener('click', errorMessageClickHandler);
+    document.addEventListener('keydown', errorMessageEscPressHandler);
   };
+
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
