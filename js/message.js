@@ -5,6 +5,8 @@
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var errorMessageHandler = function (response, description) {
+    description = description || '';
+
     var errorNode = errorTemplate.cloneNode(true);
     var errorTextNode = errorNode.querySelector('.error__message');
     var message = response;
