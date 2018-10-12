@@ -5,6 +5,7 @@
     X: 130,
     Y: 630
   };
+  var PIN_LIMIT = 5;
   var ESC_KEYCODE = 27;
 
   var page = {
@@ -45,6 +46,7 @@
   var filterFormWrapperNode = mapNode.querySelector('.map__filters-container');
 
   window.data = {
+    PIN_LIMIT: PIN_LIMIT,
     ESC_KEYCODE: ESC_KEYCODE,
     PinCoord: PinCoord,
     page: page,

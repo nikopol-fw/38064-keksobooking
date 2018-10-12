@@ -27,10 +27,8 @@
   };
 
   var renderPins = function (adverts) {
-    var pinLimit = 5;
-
     var pinFragment = document.createDocumentFragment();
-    for (var i = 0; i < adverts.length && i < pinLimit; i++) {
+    for (var i = 0; i < adverts.length && i < window.data.PIN_LIMIT; i++) {
       pinFragment.appendChild(createPin(pinTemplate, adverts[i], adverts[i].id));
     }
     window.data.pinPoolNode.appendChild(pinFragment);
