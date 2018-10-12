@@ -49,6 +49,7 @@
 
   var deactivatePage = function () {
     resetForm();
+    resetFilter();
     window.pin.resetPosMainPin();
     setAddress();
     window.pin.clearPins();
@@ -116,6 +117,15 @@
     formFieldsets.forEach(function (item) {
       item.disabled = true;
     });
+  };
+
+  // Сбрасывает фильтры
+  var resetFilter = function () {
+    window.data.filterFormNode.reset();
+
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].disabled = true;
+    }
   };
 
 
