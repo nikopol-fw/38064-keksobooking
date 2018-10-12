@@ -13,16 +13,16 @@
       if (xhr.status === 200) {
         onLoad(xhr.response);
       } else {
-        onError();
+        onError('Непредвиденная ошибка', 'Статус ответа: ' + xhr.status);
       }
     });
 
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      onError('Произошла ошибка соединения', null);
     });
 
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс', null);
     });
 
     xhr.timeout = 10000;
@@ -45,7 +45,7 @@
     });
 
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      onError('Произошла ошибка соединения', null);
     });
 
     xhr.open('POST', URL_POST);

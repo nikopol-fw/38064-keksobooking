@@ -73,9 +73,7 @@
         window.pin.renderPins(window.data.adverts);
       };
 
-      var loadErrorHandler = function () {
-        // console.log(response);
-      };
+      var loadErrorHandler = window.message.error;
 
       if (!window.data.page.active) {
         window.form.activatePage();
