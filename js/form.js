@@ -222,14 +222,14 @@
   });
 
 
-  form.addEventListener('reset', function () {
+  form.addEventListener('reset', function (evt) {
+    evt.preventDefault();
     deactivatePage();
   });
 
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
-
     window.backend.upload(new FormData(form), submitSuccessHandler, submitErrorHandler);
   });
 
