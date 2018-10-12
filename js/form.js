@@ -3,18 +3,14 @@
 (function () {
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
-  var inputTitle = form.querySelector('#title');
   var inputAddress = form.querySelector('#address');
   var inputPrice = form.querySelector('#price');
-  var inputDesc = form.querySelector('#description');
   var selectType = form.querySelector('#type');
   var selectTimeIn = form.querySelector('#timein');
   var selectTimeOut = form.querySelector('#timeout');
   var selectRooms = form.querySelector('#room_number');
   var selectCapacity = form.querySelector('#capacity');
-  var inputAvatar = form.querySelector('#avatar');
-  var inputImages = form.querySelector('#images');
-  var checkBoxsFeatures = form.querySelectorAll('.features input[name=features]');
+  var resetBtnNode = form.querySelector('.ad-form__reset');
 
   var filters = window.data.filters.children;
 
@@ -104,24 +100,13 @@
    * Привеодит форму в неактивное состояние и сбрасывает значения
    */
   var resetForm = function () {
+    form.reset();
+
+    setInputPrice(selectType.value);
     form.classList.add('ad-form--disabled');
+
     formFieldsets.forEach(function (item) {
       item.disabled = true;
-    });
-    inputTitle.value = '';
-    inputAddress.value = '';
-    inputDesc.value = '';
-    selectType.value = 'flat';
-    setInputPrice(selectType.value);
-    inputPrice.value = '';
-    selectTimeIn.value = '12:00';
-    selectRooms.value = '1';
-    selectCapacity.value = '3';
-    inputAvatar.value = '';
-    inputImages.value = '';
-
-    checkBoxsFeatures.forEach(function (item) {
-      item.checked = false;
     });
   };
 
@@ -222,7 +207,7 @@
   });
 
 
-  form.addEventListener('reset', function (evt) {
+  resetBtnNode.addEventListener('click', function (evt) {
     evt.preventDefault();
     deactivatePage();
   });
