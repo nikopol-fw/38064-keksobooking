@@ -67,6 +67,7 @@
     var filteredAdverts = filterAdverts();
     window.pin.clearPins();
     window.pin.renderPins(filteredAdverts);
+    window.card.closeCard();
   }, 500);
 
 
