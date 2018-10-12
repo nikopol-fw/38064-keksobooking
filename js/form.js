@@ -12,7 +12,7 @@
   var selectCapacity = form.querySelector('#capacity');
   var resetBtnNode = form.querySelector('.ad-form__reset');
 
-  var filters = window.data.filters.children;
+  var filters = window.data.filterFormNode.children;
 
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
@@ -22,8 +22,8 @@
    * Использует координаты .map__pin
    */
   var setAddress = function () {
-    var xCoords = window.data.mainPin.offsetLeft + window.data.mainPin.offsetWidth / 2;
-    var yCoords = window.data.mainPin.offsetTop + window.data.mainPin.offsetHeight;
+    var xCoords = window.data.mainPinNode.offsetLeft + window.data.mainPinNode.offsetWidth / 2;
+    var yCoords = window.data.mainPinNode.offsetTop + window.data.mainPinNode.offsetHeight;
     var coordsText = xCoords.toString() + ', ' + yCoords.toString();
     inputAddress.value = coordsText;
   };
@@ -35,7 +35,7 @@
   var activatePage = function () {
     window.data.page.active = true;
 
-    window.data.map.classList.remove('map--faded');
+    window.data.mapNode.classList.remove('map--faded');
     form.classList.remove('ad-form--disabled');
 
     formFieldsets.forEach(function (item) {
@@ -45,6 +45,16 @@
     for (var i = 0; i < filters.length; i++) {
       filters[i].disabled = false;
     }
+  };
+
+  var deactivatePage = function () {
+    resetForm();
+    window.pin.resetPosMainPin();
+    setAddress();
+    window.pin.clearPins();
+    window.card.closeCard();
+    window.data.mapNode.classList.add('map--faded');
+    window.data.page.active = false;
   };
 
   /**
@@ -96,9 +106,7 @@
   checkRooms();
 
 
-  /**
-   * Привеодит форму в неактивное состояние и сбрасывает значения
-   */
+  // Приводит форму в неактивное состояние и сбрасывает значения
   var resetForm = function () {
     form.reset();
 
@@ -108,17 +116,6 @@
     formFieldsets.forEach(function (item) {
       item.disabled = true;
     });
-  };
-
-
-  var deactivatePage = function () {
-    resetForm();
-    window.pin.resetPosMainPin();
-    setAddress();
-    window.pin.clearPins();
-    window.card.closeCard();
-    window.data.map.classList.add('map--faded');
-    window.data.page.active = false;
   };
 
 

@@ -31,11 +31,11 @@
     adverts.forEach(function (item) {
       pinFragment.appendChild(createPin(pinTemplate, item, item.id));
     });
-    window.data.pinMap.appendChild(pinFragment);
+    window.data.pinPoolNode.appendChild(pinFragment);
   };
 
   var clearPins = function () {
-    var pins = window.data.pinMap.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var pins = window.data.pinPoolNode.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin) {
       pin.remove();
     });
@@ -43,8 +43,8 @@
 
   // Устанавливает главный pin в стартовую позицию
   var resetPosMainPin = function () {
-    window.data.mainPin.style.top = window.data.beginCoordsMainPin[0] + 'px';
-    window.data.mainPin.style.left = window.data.beginCoordsMainPin[1] + 'px';
+    window.data.mainPinNode.style.top = window.data.beginCoordsMainPin.y + 'px';
+    window.data.mainPinNode.style.left = window.data.beginCoordsMainPin.x + 'px';
   };
 
 

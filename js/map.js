@@ -3,12 +3,12 @@
 (function () {
   var moveMainPin = function (shift) {
     var newCoords = {
-      x: window.data.mainPin.offsetLeft - shift.x,
-      y: window.data.mainPin.offsetTop - shift.y
+      x: window.data.mainPinNode.offsetLeft - shift.x,
+      y: window.data.mainPinNode.offsetTop - shift.y
     };
 
-    var xMin = 0 - window.data.mainPin.clientWidth / 2;
-    var xMax = window.data.pinMap.clientWidth - window.data.mainPin.clientWidth / 2;
+    var xMin = 0 - window.data.mainPinNode.clientWidth / 2;
+    var xMax = window.data.pinPoolNode.clientWidth - window.data.mainPinNode.clientWidth / 2;
     if (newCoords.x < xMin) {
       newCoords.x = xMin;
     }
@@ -16,8 +16,8 @@
       newCoords.x = xMax;
     }
 
-    var yMin = window.data.Y_BALLOON_CHOORDINATES[0] - window.data.mainPin.clientHeight;
-    var yMax = window.data.Y_BALLOON_CHOORDINATES[1] - window.data.mainPin.clientHeight;
+    var yMin = window.data.PinCoord.X - window.data.mainPinNode.clientHeight;
+    var yMax = window.data.PinCoord.Y - window.data.mainPinNode.clientHeight;
 
     if (newCoords.y < yMin) {
       newCoords.y = yMin;
@@ -27,8 +27,8 @@
       newCoords.y = yMax;
     }
 
-    window.data.mainPin.style.top = (newCoords.y) + 'px';
-    window.data.mainPin.style.left = (newCoords.x) + 'px';
+    window.data.mainPinNode.style.top = (newCoords.y) + 'px';
+    window.data.mainPinNode.style.left = (newCoords.x) + 'px';
   };
 
 
@@ -88,7 +88,7 @@
       window.form.setAddress();
 
 
-      window.data.pinMap.addEventListener('click', function (clickEvt) {
+      window.data.pinPoolNode.addEventListener('click', function (clickEvt) {
         var obj = clickEvt.currentTarget;
         var item = clickEvt.target;
 
@@ -111,7 +111,7 @@
     document.addEventListener('mouseup', mouseUpHandler);
   };
 
-  window.data.mainPin.addEventListener('mousedown', mouseDownMainPinHandler);
+  window.data.mainPinNode.addEventListener('mousedown', mouseDownMainPinHandler);
 
 
   window.card.pinClose.addEventListener('click', function () {

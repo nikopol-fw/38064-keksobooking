@@ -1,11 +1,11 @@
 'use strict';
 
 (function () {
-  var filterType = window.data.filters.querySelector('#housing-type');
-  var filterPrice = window.data.filters.querySelector('#housing-price');
-  var filterRooms = window.data.filters.querySelector('#housing-rooms');
-  var filterGuests = window.data.filters.querySelector('#housing-guests');
-  var filterFeatures = window.data.filters.querySelector('#housing-features');
+  var filterType = window.data.filterFormNode.querySelector('#housing-type');
+  var filterPrice = window.data.filterFormNode.querySelector('#housing-price');
+  var filterRooms = window.data.filterFormNode.querySelector('#housing-rooms');
+  var filterGuests = window.data.filterFormNode.querySelector('#housing-guests');
+  var filterFeatures = window.data.filterFormNode.querySelector('#housing-features');
 
   var filterAdverts = function () {
     var priceToValue = {
@@ -71,7 +71,7 @@
   }, 500);
 
 
-  window.data.filters.addEventListener('change', function () {
+  window.data.filterFormNode.addEventListener('change', function () {
     if (window.data.adverts) {
       filterPins();
     }

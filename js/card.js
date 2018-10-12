@@ -115,7 +115,7 @@
 
 
   // Создаем карточку для объявлений
-  window.data.map.insertBefore(cardPanel, window.data.filterMap);
+  window.data.mapNode.insertBefore(cardPanel, window.data.filterFormWrapperNode);
 
   // Кнопка закрытия карточки
   var pinClose = document.querySelector('.popup__close');
