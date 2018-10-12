@@ -126,35 +126,7 @@
   };
 
 
-  selectType.addEventListener('change', function (evt) {
-    setInputPrice(evt.target.value);
-  });
-
-  selectTimeIn.addEventListener('change', function (evt) {
-    setTimeInOut(selectTimeOut, evt.target.value);
-  });
-
-  selectTimeOut.addEventListener('change', function (evt) {
-    setTimeInOut(selectTimeIn, evt.target.value);
-  });
-
-  selectRooms.addEventListener('change', function () {
-    checkRooms();
-  });
-
-  selectCapacity.addEventListener('change', function () {
-    checkRooms();
-  });
-
-
-  form.addEventListener('reset', function () {
-    window.card.closeCard();
-    window.pin.resetPosMainPin();
-    setAddress();
-  });
-
-
-  var submitSuccessHandler = function () {
+  var deactivatePage = function () {
     resetForm();
     window.pin.resetPosMainPin();
     setAddress();
@@ -162,6 +134,11 @@
     window.card.closeCard();
     window.data.map.classList.add('map--faded');
     window.data.page.active = false;
+  };
+
+
+  var submitSuccessHandler = function () {
+    deactivatePage();
 
     var successNode = successTemplate.cloneNode(true);
     window.data.mainNode.appendChild(successNode);
@@ -222,6 +199,32 @@
     document.addEventListener('click', errorMessageClickHandler);
     document.addEventListener('keydown', errorMessageEscPressHandler);
   };
+
+
+  selectType.addEventListener('change', function (evt) {
+    setInputPrice(evt.target.value);
+  });
+
+  selectTimeIn.addEventListener('change', function (evt) {
+    setTimeInOut(selectTimeOut, evt.target.value);
+  });
+
+  selectTimeOut.addEventListener('change', function (evt) {
+    setTimeInOut(selectTimeIn, evt.target.value);
+  });
+
+  selectRooms.addEventListener('change', function () {
+    checkRooms();
+  });
+
+  selectCapacity.addEventListener('change', function () {
+    checkRooms();
+  });
+
+
+  form.addEventListener('reset', function () {
+    deactivatePage();
+  });
 
 
   form.addEventListener('submit', function (evt) {
