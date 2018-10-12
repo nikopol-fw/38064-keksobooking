@@ -4,6 +4,7 @@
   var URL_GET = 'https://js.dump.academy/keksobooking/data';
   var URL_POST = 'https://js.dump.academy/keksobooking';
 
+
   var load = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -12,7 +13,7 @@
       if (xhr.status === 200) {
         onLoad(xhr.response);
       } else {
-        onError();
+        onError('Непредвиденная ошибка', 'Статус ответа: ' + xhr.status);
       }
     });
 
@@ -30,12 +31,17 @@
     xhr.send();
   };
 
+
   var upload = function (data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      onLoad(xhr.response);
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('При отправке данных произошла ошибка.', 'Статус ответа: ' + xhr.status);
+      }
     });
 
     xhr.addEventListener('error', function () {
@@ -45,6 +51,7 @@
     xhr.open('POST', URL_POST);
     xhr.send(data);
   };
+
 
   window.backend = {
     load: load,

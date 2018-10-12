@@ -1,22 +1,14 @@
 'use strict';
 
 (function () {
-  /*
-  // Выгружает pin'ы
-  var renderPins = function () {
-    window.data.pinMap.appendChild(window.pin.balloons);
-  };
-  */
-
-
   var moveMainPin = function (shift) {
     var newCoords = {
-      x: window.data.mainPin.offsetLeft - shift.x,
-      y: window.data.mainPin.offsetTop - shift.y
+      x: window.data.mainPinNode.offsetLeft - shift.x,
+      y: window.data.mainPinNode.offsetTop - shift.y
     };
 
-    var xMin = 0 - window.data.mainPin.clientWidth / 2;
-    var xMax = window.data.pinMap.clientWidth - window.data.mainPin.clientWidth / 2;
+    var xMin = 0 - window.data.mainPinNode.clientWidth / 2;
+    var xMax = window.data.pinPoolNode.clientWidth - window.data.mainPinNode.clientWidth / 2;
     if (newCoords.x < xMin) {
       newCoords.x = xMin;
     }
@@ -24,8 +16,8 @@
       newCoords.x = xMax;
     }
 
-    var yMin = window.data.Y_BALLOON_CHOORDINATES[0] - window.data.mainPin.clientHeight;
-    var yMax = window.data.Y_BALLOON_CHOORDINATES[1] - window.data.mainPin.clientHeight;
+    var yMin = window.data.PinCoord.X - window.data.mainPinNode.clientHeight;
+    var yMax = window.data.PinCoord.Y - window.data.mainPinNode.clientHeight;
 
     if (newCoords.y < yMin) {
       newCoords.y = yMin;
@@ -35,8 +27,8 @@
       newCoords.y = yMax;
     }
 
-    window.data.mainPin.style.top = (newCoords.y) + 'px';
-    window.data.mainPin.style.left = (newCoords.x) + 'px';
+    window.data.mainPinNode.style.top = (newCoords.y) + 'px';
+    window.data.mainPinNode.style.left = (newCoords.x) + 'px';
   };
 
 
@@ -47,6 +39,7 @@
       x: evt.clientX,
       y: evt.clientY
     };
+
 
     var mouseMoveHandler = function (movEvt) {
       var shift = {
@@ -62,24 +55,25 @@
       moveMainPin(shift);
     };
 
+
     var mouseUpHandler = function () {
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
+
 
       var loadSuccessHandler = function (response) {
         window.data.page.pinLoaded = true;
         window.data.adverts = response;
 
-        var pinFragment = document.createDocumentFragment();
-        for (var j = 0; j < window.data.adverts.length; j++) {
-          pinFragment.appendChild(window.pin.createPin(window.pin.pinTemplate, window.data.adverts[j], j));
-        }
-        window.data.pinMap.appendChild(pinFragment);
+        // Добавляем индексы каждому объявлению
+        window.data.adverts.forEach(function (item, index) {
+          item.id = index;
+        });
+
+        window.pin.renderPins(window.data.adverts);
       };
 
-      var loadErrorHandler = function () {
-        // console.log(response);
-      };
+      var loadErrorHandler = window.message.error;
 
       if (!window.data.page.active) {
         window.form.activatePage();
@@ -92,7 +86,7 @@
       window.form.setAddress();
 
 
-      window.data.pinMap.addEventListener('click', function (clickEvt) {
+      window.data.pinPoolNode.addEventListener('click', function (clickEvt) {
         var obj = clickEvt.currentTarget;
         var item = clickEvt.target;
 
@@ -115,7 +109,7 @@
     document.addEventListener('mouseup', mouseUpHandler);
   };
 
-  window.data.mainPin.addEventListener('mousedown', mouseDownMainPinHandler);
+  window.data.mainPinNode.addEventListener('mousedown', mouseDownMainPinHandler);
 
 
   window.card.pinClose.addEventListener('click', function () {

@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
   /**
    * Возвразает domElement balloon'а
    *
@@ -24,25 +26,32 @@
     return newNode;
   };
 
+  var renderPins = function (adverts) {
+    var pinFragment = document.createDocumentFragment();
+    for (var i = 0; i < adverts.length && i < window.data.PIN_LIMIT; i++) {
+      pinFragment.appendChild(createPin(pinTemplate, adverts[i], adverts[i].id));
+    }
+    window.data.pinPoolNode.appendChild(pinFragment);
+  };
+
+  var clearPins = function () {
+    var pins = window.data.pinPoolNode.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+  };
+
   // Устанавливает главный pin в стартовую позицию
   var resetPosMainPin = function () {
-    window.data.mainPin.style.top = window.data.beginCoordsMainPin[0] + 'px';
-    window.data.mainPin.style.left = window.data.beginCoordsMainPin[1] + 'px';
+    window.data.mainPinNode.style.top = window.data.beginCoordsMainPin.y + 'px';
+    window.data.mainPinNode.style.left = window.data.beginCoordsMainPin.x + 'px';
   };
 
 
-  // Получаем шаблон balloon'а
-  // Создаем фрагмент. Наполняем его элементами и размещаем в контейнере
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  //  var balloonFragment = document.createDocumentFragment();
-  //  for (var i = 0; i < window.data.adverts.length; i++) {
-  //    balloonFragment.appendChild(createPin(balloonTemplate, window.data.adverts[i], i));
-  //  }
-
-
   window.pin = {
-    pinTemplate: pinTemplate,
     createPin: createPin,
+    clearPins: clearPins,
+    renderPins: renderPins,
     resetPosMainPin: resetPosMainPin
   };
 })();

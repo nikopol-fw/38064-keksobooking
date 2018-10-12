@@ -1,6 +1,12 @@
 'use strict';
 
 (function () {
+  // Получаем шаблон карточки объявления
+  // Создаем карточку на основе шаблона и скрываем ее
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var cardPanel = cardTemplate.cloneNode(true);
+  cardPanel.classList.add('hidden');
+
   /**
    * Возвращаем domElement <li> с соответствующим удобству css-классом
    *
@@ -49,13 +55,6 @@
     return node;
   };
 
-
-  // Получаем шаблон карточки объявления
-  // Создаем карточку на основе шаблона и скрываем ее
-  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-  var cardPanel = cardTemplate.cloneNode(true);
-  cardPanel.classList.add('hidden');
-
   /**
    * Заполняет данные в блок объявления .cardPanel
    *
@@ -65,7 +64,7 @@
     cardPanel.querySelector('.popup__title').textContent = adv.offer.title;
     cardPanel.querySelector('.popup__text--address').textContent = adv.offer.address;
     cardPanel.querySelector('.popup__text--price').textContent = adv.offer.price.toString() + ' ₽/ночь';
-    cardPanel.querySelector('.popup__type').textContent = adv.offer.type;
+    cardPanel.querySelector('.popup__type').textContent = window.data.realtyTypeToDesc[adv.offer.type];
     cardPanel.querySelector('.popup__text--capacity').textContent = adv.offer.rooms.toString() + ' комнаты для ' + adv.offer.guests.toString() + ' гостей';
     cardPanel.querySelector('.popup__text--time').textContent = 'Заезд после ' + adv.offer.checkin + ', выезд до ' + adv.offer.checkout;
 
@@ -96,7 +95,7 @@
     }
   };
 
-    /**
+  /**
    * Заполняет карточку объявления данными и отображает ее
    *
    * @param {number} index Целое число, итератор элемента в массиве js-объектов объявлений advertisements
@@ -116,7 +115,7 @@
 
 
   // Создаем карточку для объявлений
-  window.data.map.insertBefore(cardPanel, window.data.filterMap);
+  window.data.mapNode.insertBefore(cardPanel, window.data.filterFormWrapperNode);
 
   // Кнопка закрытия карточки
   var pinClose = document.querySelector('.popup__close');

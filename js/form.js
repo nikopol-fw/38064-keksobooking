@@ -1,51 +1,58 @@
 'use strict';
 
 (function () {
-
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
-  var inputTitle = form.querySelector('#title');
   var inputAddress = form.querySelector('#address');
   var inputPrice = form.querySelector('#price');
-  var inputDesc = form.querySelector('#description');
   var selectType = form.querySelector('#type');
   var selectTimeIn = form.querySelector('#timein');
   var selectTimeOut = form.querySelector('#timeout');
   var selectRooms = form.querySelector('#room_number');
   var selectCapacity = form.querySelector('#capacity');
-  var inputAvatar = form.querySelector('#avatar');
-  var inputImages = form.querySelector('#images');
-  var checkBoxsFeatures = form.querySelectorAll('.features input[name=features]');
+  var resetBtnNode = form.querySelector('.ad-form__reset');
 
-  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var filters = window.data.filterFormNode.children;
 
   /**
    * Заполняет поле адреса
    * Использует координаты .map__pin
    */
   var setAddress = function () {
-    var xCoords = window.data.mainPin.offsetLeft + window.data.mainPin.offsetWidth / 2;
-    var yCoords = window.data.mainPin.offsetTop + window.data.mainPin.offsetHeight;
+    var xCoords = window.data.mainPinNode.offsetLeft + window.data.mainPinNode.offsetWidth / 2;
+    var yCoords = window.data.mainPinNode.offsetTop + window.data.mainPinNode.offsetHeight;
     var coordsText = xCoords.toString() + ', ' + yCoords.toString();
     inputAddress.value = coordsText;
   };
 
   setAddress();
 
+
   // Активирует страницу
   var activatePage = function () {
     window.data.page.active = true;
 
-    window.data.map.classList.remove('map--faded');
+    window.data.mapNode.classList.remove('map--faded');
     form.classList.remove('ad-form--disabled');
 
     formFieldsets.forEach(function (item) {
       item.disabled = false;
     });
 
-    for (var j = 0; j < window.data.filters; j++) {
-      window.data.filters[j].disabled = false;
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].disabled = false;
     }
+  };
+
+  var deactivatePage = function () {
+    resetForm();
+    resetFilter();
+    window.pin.resetPosMainPin();
+    setAddress();
+    window.pin.clearPins();
+    window.card.closeCard();
+    window.data.mapNode.classList.add('map--faded');
+    window.data.page.active = false;
   };
 
   /**
@@ -67,6 +74,7 @@
   };
 
   setInputPrice(selectType.value);
+
 
   /**
    * Задает переданному select'у переданное значение
@@ -95,31 +103,26 @@
 
   checkRooms();
 
-  /**
-   * Привеодит форму в неактивное состояние и сбрасывает значения
-   */
+
+  // Приводит форму в неактивное состояние и сбрасывает значения
   var resetForm = function () {
+    form.reset();
+
+    setInputPrice(selectType.value);
     form.classList.add('ad-form--disabled');
 
-    //  formFieldsets.forEach(function (item) {
-    //    item.disabled = true;
-    //  });
-
-    inputTitle.value = '';
-    inputAddress.value = '';
-    inputDesc.value = '';
-    selectType.value = 'flat';
-    setInputPrice();
-    inputPrice.value = '';
-    selectTimeIn.value = '12:00';
-    selectRooms.value = '1';
-    selectCapacity.value = '3';
-    inputAvatar.value = '';
-    inputImages.value = '';
-
-    checkBoxsFeatures.forEach(function (item) {
-      item.checked = false;
+    formFieldsets.forEach(function (item) {
+      item.disabled = true;
     });
+  };
+
+  // Сбрасывает фильтры
+  var resetFilter = function () {
+    window.data.filterFormNode.reset();
+
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].disabled = true;
+    }
   };
 
 
@@ -144,47 +147,24 @@
   });
 
 
-  form.addEventListener('reset', function () {
-    window.card.closeCard();
-    window.pin.resetPosMainPin();
-    setAddress();
+  resetBtnNode.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    deactivatePage();
   });
 
 
-  var submitSuccessHandler = function () {
-    resetForm();
-    window.pin.resetPosMainPin();
-    setAddress();
-
-    //  window.data.map.classList.add('map--faded');
-    //  window.data.page.active = false;
-  };
-
-  var submitErrorHandler = function (response) {
-    var errorNode = errorTemplate.cloneNode(true);
-    errorNode.querySelector('.error__message').textContent = response;
-    var main = document.body.querySelector('main');
-    main.appendChild(errorNode);
-    var errorBtn = errorNode.querySelector('.error__button');
-
-    var closeErrorMessage = function () {
-      errorBtn.removeEventListener('click', closeErrorMessage);
-      main.removeChild(errorNode);
-      errorNode = null;
-    };
-
-    errorBtn.addEventListener('click', closeErrorMessage);
-  };
+  var submitSuccessHandler = window.message.success;
+  var submitErrorHandler = window.message.error;
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
-
     window.backend.upload(new FormData(form), submitSuccessHandler, submitErrorHandler);
   });
 
 
   window.form = {
     setAddress: setAddress,
-    activatePage: activatePage
+    activatePage: activatePage,
+    deactivatePage: deactivatePage
   };
 })();
