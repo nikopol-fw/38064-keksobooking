@@ -1,6 +1,12 @@
 'use strict';
 
 (function () {
+  // Получаем шаблон карточки объявления
+  // Создаем карточку на основе шаблона и скрываем ее
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var cardPanel = cardTemplate.cloneNode(true);
+  cardPanel.classList.add('hidden');
+
   /**
    * Возвращаем domElement <li> с соответствующим удобству css-классом
    *
@@ -48,13 +54,6 @@
 
     return node;
   };
-
-
-  // Получаем шаблон карточки объявления
-  // Создаем карточку на основе шаблона и скрываем ее
-  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-  var cardPanel = cardTemplate.cloneNode(true);
-  cardPanel.classList.add('hidden');
 
   /**
    * Заполняет данные в блок объявления .cardPanel

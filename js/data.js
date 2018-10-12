@@ -238,6 +238,9 @@
   var titlesRandomList = shuffleArray(REALTY_TITLES.slice());
   */
 
+  // Main node основное содержимое страницы
+  var mainNode = document.body.querySelector('main');
+
   // Блок карты
   var map = document.querySelector('.map');
   // Контейнер для pin'ов
@@ -281,6 +284,8 @@
     // filters: filters,
     filterMap: filterMap,
     formAdvInputAddress: formAdvInputAddress,
+
+    mainNode: mainNode,
 
 
     realtyTypeToDesc: realtyTypeToDesc,

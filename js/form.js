@@ -19,6 +19,7 @@
   var filters = window.data.filters.children;
 
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
   /**
    * Заполняет поле адреса
@@ -32,6 +33,7 @@
   };
 
   setAddress();
+
 
   // Активирует страницу
   var activatePage = function () {
@@ -69,6 +71,7 @@
 
   setInputPrice(selectType.value);
 
+
   /**
    * Задает переданному select'у переданное значение
    * @param {object} select domElement select которому нужно задать такой же value
@@ -96,21 +99,20 @@
 
   checkRooms();
 
+
   /**
    * Привеодит форму в неактивное состояние и сбрасывает значения
    */
   var resetForm = function () {
     form.classList.add('ad-form--disabled');
-
-    //  formFieldsets.forEach(function (item) {
-    //    item.disabled = true;
-    //  });
-
+    formFieldsets.forEach(function (item) {
+      item.disabled = true;
+    });
     inputTitle.value = '';
     inputAddress.value = '';
     inputDesc.value = '';
     selectType.value = 'flat';
-    setInputPrice();
+    setInputPrice(selectType.value);
     inputPrice.value = '';
     selectTimeIn.value = '12:00';
     selectRooms.value = '1';
@@ -156,21 +158,46 @@
     resetForm();
     window.pin.resetPosMainPin();
     setAddress();
+    window.pin.clearPins();
+    window.card.closeCard();
+    window.data.map.classList.add('map--faded');
+    window.data.page.active = false;
 
-    //  window.data.map.classList.add('map--faded');
-    //  window.data.page.active = false;
+    var successNode = successTemplate.cloneNode(true);
+    window.data.mainNode.appendChild(successNode);
+
+    var closeSuccessMessage = function (node) {
+      node.remove();
+      node = null;
+
+      document.removeEventListener('click', successNodeClickHandler);
+      document.removeEventListener('keydown', successNodeEscPressHandler);
+    };
+
+    var successNodeClickHandler = function () {
+      closeSuccessMessage(successNode);
+    };
+
+    var successNodeEscPressHandler = function (evt) {
+      if (evt.keyCode === window.data.ESC_KEYCODE) {
+        closeSuccessMessage(successNode);
+      }
+    };
+
+    document.addEventListener('click', successNodeClickHandler);
+    document.addEventListener('keydown', successNodeEscPressHandler);
   };
+
 
   var submitErrorHandler = function (response) {
     var errorNode = errorTemplate.cloneNode(true);
     errorNode.querySelector('.error__message').textContent = response;
-    var main = document.body.querySelector('main');
-    main.appendChild(errorNode);
+    window.data.mainNode.appendChild(errorNode);
     var errorBtn = errorNode.querySelector('.error__button');
 
     var closeErrorMessage = function () {
       errorBtn.removeEventListener('click', closeErrorMessage);
-      main.removeChild(errorNode);
+      window.data.mainNode.removeChild(errorNode);
       errorNode = null;
     };
 

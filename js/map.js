@@ -1,14 +1,6 @@
 'use strict';
 
 (function () {
-  /*
-  // Выгружает pin'ы
-  var renderPins = function () {
-    window.data.pinMap.appendChild(window.pin.balloons);
-  };
-  */
-
-
   var moveMainPin = function (shift) {
     var newCoords = {
       x: window.data.mainPin.offsetLeft - shift.x,
@@ -48,6 +40,7 @@
       y: evt.clientY
     };
 
+
     var mouseMoveHandler = function (movEvt) {
       var shift = {
         x: startCoords.x - movEvt.clientX,
@@ -62,9 +55,11 @@
       moveMainPin(shift);
     };
 
+
     var mouseUpHandler = function () {
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
+
 
       var loadSuccessHandler = function (response) {
         window.data.page.pinLoaded = true;
