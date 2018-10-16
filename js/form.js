@@ -109,6 +109,8 @@
     form.reset();
 
     setInputPrice(selectType.value);
+    window.file.avatarPreviewNode.src = window.file.DEFAULT_AVATAR;
+    window.file.resetPhotos();
     form.classList.add('ad-form--disabled');
 
     formFieldsets.forEach(function (item) {
@@ -163,6 +165,7 @@
 
 
   window.form = {
+    form: form,
     setAddress: setAddress,
     activatePage: activatePage,
     deactivatePage: deactivatePage
