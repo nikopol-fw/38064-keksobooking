@@ -13,31 +13,6 @@
   var photoPreviewTemplate = photoPreviewNode.cloneNode(true);
 
 
-  var uploadImg = function (fileNode, previewNode) {
-    var file = fileNode.files[0];
-
-    if (file) {
-      var matches = IMAGE_TYPES.some(function (item) {
-        return item === file.type;
-      });
-
-      if (matches) {
-        var reader = new FileReader();
-
-        reader.addEventListener('load', function () {
-          previewNode.src = reader.result;
-        });
-
-        reader.readAsDataURL(file);
-      }
-    }
-  };
-
-  avatarUploadNode.addEventListener('change', function () {
-    uploadImg(avatarUploadNode, avatarPreviewNode);
-  });
-
-
   var removePhotos = function () {
     var photosNode = window.form.form.querySelectorAll('.ad-form__photo');
     photosNode.forEach(function (item) {
@@ -50,6 +25,28 @@
     var defaultPhoto = photoPreviewTemplate.cloneNode(true);
     photosPoolNode.appendChild(defaultPhoto);
   };
+
+
+  avatarUploadNode.addEventListener('change', function () {
+    var file = avatarUploadNode.files[0];
+
+    if (file) {
+      var matches = IMAGE_TYPES.some(function (item) {
+        return item === file.type;
+      });
+
+      if (matches) {
+        var reader = new FileReader();
+
+        reader.addEventListener('load', function () {
+          avatarPreviewNode.src = reader.result;
+        });
+
+        reader.readAsDataURL(file);
+      }
+    }
+  });
+
 
   photosUploadNode.addEventListener('change', function () {
     var file = photosUploadNode.files;
